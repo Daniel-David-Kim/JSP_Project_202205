@@ -106,7 +106,8 @@ insert into C_TBL (scat_num, title, content, vid_title, vid_url, code, summary, 
 insert into C_TBL (scat_num, title, content, vid_title, vid_url, code, summary, img) values(3, 'Hello World', '', '강의', 'https://www.youtube.com/embed/xNMGGQIU8FU', null, null, null);
 insert into C_TBL (scat_num, title, content, vid_title, vid_url, code, summary, img) values(4, '경찰서 조서', '', '강의', 'https://www.youtube.com/embed/LF46oSNFP_U', null, null, null);
 
-create table comment_2001_1(
+/*
+create table comment_2001_1( # 2001(C과목) 1번 게시글 댓글 모음
 	c_num bigint not null primary key,
     p_num bigint not null default 0,
     m_id varchar(30) not null,
@@ -114,7 +115,7 @@ create table comment_2001_1(
     content text not null,
     writeDate date not null default (current_date())
 );
-create table comment_2001_2(
+create table comment_2001_2( # 2001(C과목) 2번 게시글 댓글 모음
 	c_num bigint not null primary key,
     p_num bigint not null default 0,
     m_id varchar(30) not null,
@@ -122,7 +123,7 @@ create table comment_2001_2(
     content text not null,
     writeDate date not null default (current_date())
 );
-create table comment_2001_3(
+create table comment_2001_3( # 2001(C과목) 3번 게시글 댓글 모음
 	c_num bigint not null primary key,
     p_num bigint not null default 0,
     m_id varchar(30) not null,
@@ -130,7 +131,7 @@ create table comment_2001_3(
     content text not null,
     writeDate date not null default (current_date())
 );
-create table comment_2001_4(
+create table comment_2001_4( # 2001(C과목) 4번 게시글 댓글 모음
 	c_num bigint not null primary key,
     p_num bigint not null default 0,
     m_id varchar(30) not null,
@@ -138,6 +139,20 @@ create table comment_2001_4(
     content text not null,
     writeDate date not null default (current_date())
 );
+*/
+# 슬슬 생각나는 보완점 : 원래는 과목의 강의마다 이렇게 댓글 테이블을 하나하나 생성하려 그랬다. 근데 그러면 테이블이 너무 많아진다.
+# 그냥 과목마다 댓글 테이블을 하나씩 만들고, 강의 번호(특소분류 번호)로 구분을 지어서 하나로 합치는 건 어떨까? 밑에처럼?
+create table comment_2001( # 2001(C과목) 모든 댓글 모음
+	c_num bigint not null primary key,
+    p_num bigint not null default 0,
+    m_id varchar(30) not null,
+    title text not null,
+    content text not null,
+    writeDate date not null default (current_date()),
+    scat_num int not null,   # 게시글 분류 (이건 C_TBL에 있죠?) : 그래서 외래키! 게시글과 동고동락을 함께 한다! 
+    foreign key(scat_num) references C_TBL(scat_num) on delete cascade on update cascade
+);
+
 
 select * from members;
 select * from menus;
