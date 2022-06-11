@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style> 
+		*{padding: 0px; margin: 0px;}
+		.navbar{background-color:#F06824; line-height:3; display: flex; justify-content:center;}
+		.navbar > ul{width: 1280px; display: flex; justify-content: space-around;}
+
+		nav > ul > li > a{padding: 10px 15px;}
+		nav > ul > li{text-align: center;}
+		nav > ul > li:hover > ul{display: block; background:skyblue; position: absolute; width: 150px;}
+		ul > li{list-style: none; display: block;}
+		ul > li > a{font-family:"함초롬돋움"; color:white; font-weight:bold; font-size: 17px; text-decoration:none;}
+		ul > li > a:hover{color:#F3E02A; cursor: pointer;}
+
+		.down_menu{display:none}
+	</style>
+</head>
+<body>
+	<nav class="navbar"><!--nav.navbar-->
+		<ul>
+			<li><a href="#">언어 기초</a>
+				<ul class="down_menu">
+					<li><a href="#">C</a></li>
+					<li><a href="#">Java</a></li>
+					<li><a href="#">Python</a></li>
+				</ul>
+			</li>
+			<li><a href="#">서버</a>
+				<ul class="down_menu">
+					<li><a href="#">JSP</a></li>
+					<li><a href="#">Spring</a></li>
+					<li><a href="#">Node.js</a></li>
+				</ul>
+			</li>
+			<li><a href="#">DB</a>
+				<ul class="down_menu">
+					<li><a href="#">Oracle</a></li>
+					<li><a href="#">MySQL</a></li>
+				</ul>
+			</li>
+			<li><a href="#">개발 도구</a>
+				<ul class="down_menu">
+					<li><a href="#">VirtualBox</a></li>
+				</ul>
+			</li>
+			<li><a href="#">프로젝트 관리</a>
+				<ul class="down_menu">
+					<li><a href="#">Github</a></li>
+					<li><a href="#">Git</a></li>
+				</ul>
+			</li>
+			<li><a href="#">이론과 팁</a>
+				<ul class="down_menu">
+					<li><a href="#">알고리즘</a></li>
+					<li><a href="#">OAuth</a></li>
+				</ul>
+			</li>
+		</ul>
+	</nav><!--nav.navbar-->
+	
+</body>
+</html>
