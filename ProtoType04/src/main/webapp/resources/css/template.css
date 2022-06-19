@@ -1,0 +1,183 @@
+*{margin: 0px; padding: 0px;}
+@font-face{
+	font-family:'BebasNeue';
+	src:url('../font/BebasNeue-Regular.woff') format('woff');
+}
+
+.highest{height:100px; width:100%; align: center; display: flex; align-items:center; justify-content:center; text-align: center;}
+.highest.center-content1{width:1280px; display:flex; align-items:center; justify-content:space-between;}
+.logo{width:401.5px;}
+.logolink:hover{cursor:pointer;}
+
+.item_box{height:75%; display:flex; justify-content:space-around; font-family:"BebasNeue"; align-items:flex-end; margin-right: 30px; font-size:20px;}
+.upper_links{text-decoration:none; color:black; margin-left:50px;}
+.upper_links pre{font-family:"BebasNeue";margin-left:50px; font-size:20px;}
+
+.pic_container{width:100%; height:228px; display:flex; justify-content:center;}
+.pic_container-center{width:100%; height:100%; overflow:hidden;}
+
+
+
+
+.navbar{background-color:#F06824; display:flex; justify-content:center; line-height: 2.87; text-align:center;}
+.nav{width:1280px; display: flex; justify-content:space-around; align-items:center;}
+				
+.nav > li{list-style-type:none; position:relative;}
+.nav > li:hover > ul{display: block; position:absolute; width:200px; background:white; text-align:left; box-shadow:0px 0px 5px #686868; font-size: 14px;}
+.nav > li > ul{display: none; list-style: none;}
+.nav > li > ul > li{padding-left:10px; padding-right:5px; display:flex; justify-content:space-between; align-items:center;}
+.nav.ul.first{right:-65px;}
+.nav.ul.second{right:-85px;}
+.nav.ul.third{right:-90px;}
+.nav.ul.fourth{right:-65px;}
+.nav.ul.fifth{right:-50px;}
+.nav.ul.last{right:-65px;}
+
+.nav li a{text-decoration:none;}
+.navitem ~ ul a{color:#686868;}
+.navitem ~ ul > li:hover{background:#F8E494;}
+
+.navitem{font-family:"함초롬돋움"; color:white; font-weight:bold; font-size: 17px; text-decoration:none;}
+.navitem:hover{color:#F3E02A; cursor: pointer;}
+.lecture.btns{display:none;}
+
+
+
+.tree_container{background-color:#f3c02d; width:100%; height:35px; display:flex; align-items:center; justify-content:center;}
+.tree{width:1280px;}
+.nodes{font-family:"함초롬돋움"; font-weight:bold; font-size:12px;}
+
+.whole{width: 100%; display:flex; justify-content:center;}
+.article_container{width:1280px;}
+.article_main{width:840px; display:flex; justify-content:center; padding-top:70px; padding-bottom:40px; flex-direction:column; padding-right:220px; padding-left:220px;}
+.depth_p{height:24px}
+.depth_p.slim{height:5px}
+.phrase{font-family:"함초롬돋움"; font-size:15px; margin:1em 0;}
+.container{display:flex; justify-content:center; margin:12px 0;}
+.titleh2Default{font-family:"BebasNeue"; font-weight:bolder; height:42.23px;}
+.comments{width: 840px; padding-top:10px; margin:0 220px;}
+.form_comment{display:flex; justify-content:space-between; padding-bottom:30px;}
+.comment_list{width:100%;}
+
+
+@media(max-width: 1280px){
+	.highest{justify-content:flex-start;}
+	.whole{width: 100%; display:flex; justify-content:flex-start;}
+	
+	.lecture.btns{display:flex;}
+	.nav.ul.first{right:-120px;}
+	.nav.ul.second{right:-90px;}
+	.nav.ul.third{right:-95px;}
+	.nav.ul.fourth{right:-70px;}
+	.nav.ul.fifth{right:-50px;}
+	.nav.ul.last{right:-10px;}
+}
+@media(max-width: 840px) {
+	.article_main{padding-left: 0px;}
+}
+.page_wrapper{width:100%;display:flex;justify-content:space-between;}
+.lecture_container{width:990px;}
+
+.left_wing{width:290px;background-color:#F8E494; padding-left:0px;}
+.lectures_container{padding-left:0px; margin-top: 0px;}
+.lecture_list{list-style-type:none;}
+.lecture_link{ font-family:"함초롬돋움"; font-size:11px; font-weight:bold; color:#686868; text-decoration:none;  display:flex; padding:10px 5px 10px 15px;}
+.lecture_link:hover{background-color:#F3C02A; color:black; cursor:pointer;}
+.lecture_title{font-family:"BebasNeue"; font-size:40px; font-weight:bolder; text-align:center; margin:0 0 15px 0;}
+.lecture_date_shower{text-align:center; font-size:14px; color:#686868; padding-bottom:25px;}
+.small_phrase{font-family:"함초롬돋움"; font-size:15px; margin-bottom:25px; margin-top:0px;}
+.source_code{width:820px; overflow:scroll; border:5px solid #F8E494; padding:5px 5px 5px 5px;}
+.dynamic_phrase{width:830px;  padding:5px 5px 5px 5px; white-space:pre-wrap; font-family:"함초롬돋움"; font-size:15px; margin:1em 0;}
+
+.form_template{margin-left:70px; margin-right:70px; border:3px solid #F8E494;}
+.form_container{margin-left:150px; margin-right:150px; display:flex; justify-content:center;}
+.form_label{font-family:"BebasNeue"; font-weight:normal; font-size:20px;}
+.form_input{background:#F8E494; width:100%; height:40px; border:none;}
+.btn{height:39px; border-radius:10px; border:none; font-family:"BebasNeue"; font-size:19px; font-weight:normal;}
+.btn:hover{cursor:pointer;}
+.btn.btn_primary{background:#F06824; color:white;}
+
+.form_container.arrange{display:flex; justify-content:space-between;}
+.form_link{text-decoration:none; color:black; font-family:"BebasNeue"; font-size:17px; font-weight:normal;}
+.slash{vertical-align:center; padding-top:8px;}
+
+.lecturer{padding:5px 20px; display:flex; justify-content:flex-start; align-items:center;}
+.lecturer_info{margin-left:25px; display:block;}
+.lecturer_class{font-family:"함초롬돋움"; font-size:13px; font-weight:bold;}
+.lecturer_name{font-family:"함초롬돋움"; font-size:17px; margin-top:5px; font-weight:bolder;}
+
+#lecturer_link{padding-left:20px; padding-right:20px; margin-top:5px; display:flex; justify-content:space-between;}
+#user_link{padding-left:20px; padding-right:20px; margin-top:5px; display:flex;}
+#lecturer_link > a{text-decoration:none; color:black; font-family:"함초롬돋움"; font-weight:bold; font-size:14px;}
+#user_link > a{text-decoration:none; color:black; font-family:"함초롬돋움"; font-weight:bold; font-size:14px;}
+
+.warning_message{margin-top:12px; font-family:"함초롬돋움"; color:red; font-weight:bold; font-size:14px;}
+
+.logined_profile_container{width:720px; border:5px solid #F8E494; display:flex; justify-content:center; align-items: center;}
+.logined_profile_container_pad_fr{width:720px; padding-top: 30px; padding-bottom: 30px; padding-left: 20px; padding-right: 10px; display:flex; justify-content:space-between;}
+.depth_p.logined{height: 180px;}
+.logined_info{font-family:"BebasNeue"; width:425px;}
+.logined_info > h1{font-size:40px; margin-top:20px;}
+.logined_info > h3{font-size:21px; margin-top:20px;}
+.logined_info > div{display:flex; justify-content:flex-end; margin-top:20px;}
+.logined_info > div > button{width: 130px;margin-right:30px;}
+
+.table{width:810px; border:3px solid #F06824; border-radius:5px; table-layout: fixed; border-collapse:collapse; box-shadow:0 0 0 3px #F06824; border-style:hidden;}
+.tablerow{height:30px; font-family:"함초롬돋움"; font-size: 12px; text-align:center; border-top:0px;}
+
+.tablerow > td{overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding: 5px;}
+
+.tablerow.headrow{background-color:#F06824; color:white;}
+.tablerow.rowdip{background-color:#F8E494;}
+.numcol{width:120px;}
+.titlecol{width:474px;}
+.titlecol > a{text-decoration:none; color:black; font-weight:bolder;}
+.titlecol > a:hover{text-decoration:underline; cursor:pointer;}
+.authorcol{width:120px;}
+.authorcol.bauthor{color:blue; font-weight:bold;}
+.datecol{width:80px;}
+.lecture_label{font-family:"함초롬돋움"; font-size:11px; font-weight:bold; color:#686868; text-decoration:none;  display:flex; padding:10px 5px 10px 15px;}
+.table_pages{}
+.depth_p.cboard{height: 447px;}
+.page_list{display:flex;}
+.page_l{margin-right: 10px;}
+.page_list > li{list-style-type:none;}
+.page_list > li:hover{text-decoration:underline;}
+.page_list > li > a{text-decoration:none; color:black; font-size:14px; font-family:"함초롬돋움"; font-weight:bolder;}
+.btn-small{font-size:15px; font-weight:lighter; height:30px; width:59px;}
+
+.idcol{width:100px;}
+.idcol > a{color:blue;}
+.namecol{width:83px;}
+.classcol{width:55px;}
+.contactcol{width:100px;}
+.pwcol{width:100px;}
+.piccol{width:90px;}
+.qcol{width:110px;}
+.acol{width:110px;}
+.ucol{width:65spx;}
+.dcol{width:67px;}
+
+.scroll-container{overflow:scroll;}
+.scroll-container::-webkit-scrollbar{width:10px; height:10px;}
+.scroll-container::-webkit-scrollbar-thumb{background-color:#F8E494;}
+.depth_p.cpanel{height:4px;}
+
+.form_update_profile{width:710px; border:5px solid #F8E494; display:flex; justify-content:center;}
+.form_update_box{width:610px; margin-top:50px; margin-bottom:50px;}
+.form_update_row{display:flex; justify-content:space-between;}
+.form_update_row > div > h3{font-family:"함초롬돋움"; font-weight:bold; font-size:15px;}
+.form_input_wrap{width: 400px;}
+.depth_update{height:19px;}
+.form_input_wrap.update_cont{display:flex; justify-content:space-between;}
+.update_img_file{display:flex; align-items:flex-start;}
+.update_img_file > img{margin-right:20px;}
+.depth_update_deep{height:89px;}
+
+.form_textfield_wrap > textarea{width:400px; height:200px; border:none; background:#F8E494;}
+.depth_textarea{height:179px;}
+.btn.btn_secondary{background:#f3c02d; color:white;}
+
+.popup_button{display:flex; align-items:center; font-family:"함초롬돋움"; font-weight:bold;}
+.popup_button:hover{cursor:pointer;}
+.popup_form{display:none;}
