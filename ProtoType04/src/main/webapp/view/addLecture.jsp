@@ -46,6 +46,12 @@
 							<% } %>
 								<div class="form_update_box">
 
+									<% if(isAdd == false) { 
+										int lectureNum = (int)request.getAttribute("lectureNum");
+									%>
+										<input type="hidden" name="lectureNum" value="<%=lectureNum%>" />
+										<input type="hidden" name="changedFields" value="" /> 	
+									<% } %>
 									
 									<div class="form_update_row">
 										<div>
@@ -56,9 +62,13 @@
 										<div class="form_input_wrap">
 											<% if(isAdd == true) { %>
 											<input type="text" name="title" class="form_input" />	<!-- 00 -->
-											<% } else { %>
-											<input type="text" name="title" class="form_input" value="<%=lecture.getTitle()%>" />	<!-- 00 -->
-											<% } %>
+											<% } else { 
+													if((lecture.getTitle() == null) || (lecture.getTitle().equals(""))) { %>
+														<input type="text" name="title" class="form_input" />	<!-- 00 -->
+											<% 		} else { %>
+														<input type="text" name="title" class="form_input" value="<%=lecture.getTitle()%>" />	<!-- 00 -->
+											<% 		}
+											   } %>
 										</div>
 									</div>
 									<div class="form_container">  <!-- 0 -->
@@ -77,9 +87,13 @@
 										<div class="form_textfield_wrap">
 											<% if(isAdd == true) { %>
 											<textarea name="content"></textarea>	<!-- 00 -->
-											<% } else { %>
-											<textarea name="content"><%=lecture.getContent()%></textarea>	<!-- 00 -->
-											<% } %>
+											<% } else { 
+													if((lecture.getContent() == null) || (lecture.getContent().equals(""))) { %>
+														<textarea name="content"></textarea>	<!-- 00 -->
+											<% 		} else { %>
+														<textarea name="content"><%=lecture.getContent()%></textarea>
+											<% 		}
+											   } %>
 										</div>
 									</div>
 									<p class="depth_p"></p>
@@ -95,9 +109,13 @@
 										<div class="form_input_wrap">
 											<% if(isAdd == true) { %>
 											<input type="text" name="vid_title" class="form_input" />	<!-- 00 -->
-											<% } else { %>
-											<input type="text" name="vid_title" class="form_input" value="<%=lecture.getVid_title()%>" />	<!-- 00 -->
-											<% } %>
+											<% } else { 
+													if((lecture.getVid_title() == null) || (lecture.getVid_title().equals(""))) { %>
+														<input type="text" name="vid_title" class="form_input" />	<!-- 00 -->
+											<% 		} else { %>
+														<input type="text" name="vid_title" class="form_input" value="<%=lecture.getVid_title()%>" />	<!-- 00 -->
+											<% 		}
+											   } %>
 										</div>
 									</div>
 									<div class="form_container">  <!-- 1 -->
@@ -116,9 +134,13 @@
 										<div class="form_input_wrap">
 											<% if(isAdd == true) { %>
 											<input type="text" name="vid_url" class="form_input" />	<!-- 00 -->
-											<% } else { %>
-											<input type="text" name="vid_url" class="form_input" value="<%=lecture.getVid_url()%>" />	<!-- 00 -->
-											<% } %>
+											<% } else { 
+													if((lecture.getVid_url() == null) || (lecture.getVid_url().equals(""))) { %>
+														<input type="text" name="vid_url" class="form_input" />	<!-- 00 -->
+											<% 		} else { %>
+														<input type="text" name="vid_url" class="form_input" value="<%=lecture.getVid_url()%>" />	<!-- 00 -->
+											<% 		}
+											   } %>
 										</div>
 									</div>
 									<div class="form_container">  <!-- 2 -->
@@ -136,9 +158,13 @@
 										<div class="form_textfield_wrap">
 											<% if(isAdd == true) { %>
 											<textarea name="code"></textarea>	<!-- 00 -->
-											<% } else { %>
-											<textarea name="code"><%=lecture.getCode()%></textarea>	<!-- 00 -->
-											<% } %>
+											<% } else { 
+													if((lecture.getCode() == null) || (lecture.getCode().equals(""))) { %>
+														<textarea name="code"></textarea>	<!-- 00 -->
+											<% 		} else { %>
+														<textarea name="code"><%=lecture.getCode()%></textarea>
+											<% 		}
+											   } %>
 										</div>
 									</div>
 									<p class="depth_p"></p>
@@ -153,9 +179,13 @@
 										<div class="form_textfield_wrap">
 											<% if(isAdd == true) { %>
 											<textarea name="summary"></textarea>	<!-- 00 -->
-											<% } else { %>
-											<textarea name="summary"><%=lecture.getSummary()%></textarea>	<!-- 00 -->
-											<% } %>
+											<% } else { 
+													if((lecture.getSummary() == null) || (lecture.getSummary().equals(""))) { %>
+														<textarea name="summary"></textarea>	<!-- 00 -->
+											<% 		} else { %>
+														<textarea name="summary"><%=lecture.getSummary()%></textarea>
+											<% 		}
+											   } %>
 										</div>
 									</div>
 									<p class="depth_p"></p>
@@ -169,7 +199,8 @@
 											<hr style="width:200px; border:1px solid #F8E494;">
 										</div>
 										<div class="form_input_wrap">
-											<input type="file" name="img" />	<!-- 00 -->
+											<input type="hidden" name="img1Changedbool" value="false" />
+											<input type="file" name="img" onchange="img1Uploaded()" />	<!-- 00 -->
 										</div>
 									</div>
 									<p class="depth_p"></p>
@@ -183,13 +214,18 @@
 										<div class="form_input_wrap">
 											<div class="update_img_file">
 												<% if(lecture.getImg() == null) { %>
-												<img src="<%=request.getContextPath()%>/resources/images/gray_50.jpg" style="width:110px; height:110px;" />
+												<input type="hidden" name="img1Changedbool" value="false" />
+												<img src="<%=request.getContextPath()%>/resources/images/gray_50.jpg" name="img1show" onclick="img1Delete()" style="width:110px; height:110px;" />
+												<input type="hidden" name="img1Uploadedbool" value="false" />
 												<% } else { 
 													application.setAttribute("lectureImg", lecture.getImg());
 												%>
-												<img src="<%=request.getContextPath()%>/getRes/lecture/image" style="width:110px; height:110px;" />
+												<input type="hidden" name="img1Changedbool" value="false" /><!-- 이미지에 변동이 있을 시 true로 바뀐다. -->
+												<img src="<%=request.getContextPath()%>/getRes/lecture/image" name="img1show" onclick="img1Delete()" style="width:110px; height:110px;" />
+												<input type="hidden" name="img1Uploadedbool" value="true" /><!-- 이미지가 이미 있을 시 true로 바뀐다. -->
+												
 												<% } %>
-												<input type="file" name="" />
+												<input type="file" name="img" onchange="img1Uploaded()" />
 											</div>	
 										</div>
 									</div>
@@ -220,9 +256,13 @@
 											<div class="form_input_wrap">
 												<% if(isAdd == true) { %>
 												<input type="text" name="vid_title2" class="form_input" onfocus="ip2FirstTest(event)" />	<!-- 00 -->
-												<% } else { %>
-												<input type="text" name="vid_title2" class="form_input" onfocus="ip2FirstTest(event)" value="<%=lecture.getVid_title2()%>" />	<!-- 00 -->
-												<% } %>
+												<% } else { 
+														if((lecture.getVid_title2() == null) || (lecture.getVid_title2().equals(""))) { %>
+															<input type="text" name="vid_title2" class="form_input" onfocus="ip2FirstTest(event)" />	<!-- 00 -->
+												<% 		} else { %>
+															<input type="text" name="vid_title2" class="form_input" onfocus="ip2FirstTest(event)" value="<%=lecture.getVid_title2()%>" />	<!-- 00 -->
+												<% 		}
+											   	   } %>
 											</div>
 										</div>
 										<div class="form_container">  <!-- 3 -->
@@ -240,9 +280,13 @@
 											<div class="form_input_wrap">
 												<% if(isAdd == true) { %>
 												<input type="text" name="vid_url2" class="form_input" onfocus="ip2TitleTest(event)" />	<!-- 00 -->
-												<% } else { %>
-												<input type="text" name="vid_url2" class="form_input" onfocus="ip2TitleTest(event)" value="<%=lecture.getVid_url2()%>" />	<!-- 00 -->
-												<% } %>
+												<% } else { 
+														if((lecture.getVid_url2() == null) || (lecture.getVid_url2().equals(""))) { %>
+															<input type="text" name="vid_url2" class="form_input" onfocus="ip2FirstTest(event)" />	<!-- 00 -->
+												<% 		} else { %>
+															<input type="text" name="vid_url2" class="form_input" onfocus="ip2FirstTest(event)" value="<%=lecture.getVid_url2()%>" />	<!-- 00 -->
+												<% 		}
+											   	   } %>
 											</div>
 										</div>
 										<div class="form_container"> <!-- 4 -->
@@ -260,9 +304,13 @@
 											<div class="form_textfield_wrap">
 												<% if(isAdd == true) { %>
 												<textarea name="code2" onfocus="ip2Test(event)"></textarea>	<!-- 00 -->
-												<% } else { %>
-												<textarea name="code2" onfocus="ip2Test(event)"><%=lecture.getCode2()%></textarea>	<!-- 00 -->
-												<% } %>
+												<% } else { 
+														if((lecture.getCode2() == null) || (lecture.getCode2().equals(""))) { %>
+															<textarea name="code2" onfocus="ip2Test(event)"></textarea>	<!-- 00 -->
+												<% 		} else { %>
+															<textarea name="code2" onfocus="ip2Test(event)"><%=lecture.getCode2()%></textarea>
+												<% 		}
+											   	   } %>
 											</div>
 										</div>
 										<p class="depth_p"></p>
@@ -277,9 +325,13 @@
 											<div class="form_textfield_wrap">
 												<% if(isAdd == true) { %>
 												<textarea name="summary2" onfocus="ip2Test(event)"></textarea>	<!-- 00 -->
-												<% } else { %>
-												<textarea name="summary2" onfocus="ip2Test(event)"><%=lecture.getSummary2()%></textarea>	<!-- 00 -->
-												<% } %>
+												<% } else { 
+														if((lecture.getSummary2() == null) || (lecture.getSummary2().equals(""))) { %>
+															<textarea name="summary2" onfocus="ip2Test(event)"></textarea>	<!-- 00 -->
+												<% 		} else { %>
+															<textarea name="summary2" onfocus="ip2Test(event)"><%=lecture.getSummary2()%></textarea>
+												<% 		}
+											   	   } %>
 											</div>
 										</div>
 										<p class="depth_p"></p>
@@ -293,6 +345,7 @@
 												<hr style="width:200px; border:1px solid #F8E494;">
 											</div>
 											<div class="form_input_wrap">
+												<input type="hidden" name="img2Changedbool" value="false" />
 												<input type="file" name="img2" onClick="ip2Test(event)" onchange="img2Uploaded()" />	<!-- 00 -->
 											</div>
 										</div>
@@ -307,25 +360,80 @@
 											<div class="form_input_wrap">
 												<div class="update_img_file">
 													<% if(lecture.getImg2() == null) { %>
-													<img src="<%=request.getContextPath()%>/resources/images/gray_50.jpg" style="width:110px; height:110px;" />
+													<input type="hidden" name="img2Changedbool" value="false" />
+													<img src="<%=request.getContextPath()%>/resources/images/gray_50.jpg" name="img2show" onclick="img2Delete()" style="width:110px; height:110px;" />
+													<input type="hidden" name="img2Uploadedbool" value="false" />
 													<% } else { 
 														application.setAttribute("lectureImg2", lecture.getImg2());
 													%>
-													<img src="<%=request.getContextPath()%>/getRes/lecture/image2" style="width:110px; height:110px;" />
+													<input type="hidden" name="img2Changedbool" value="false" />
+													<img src="<%=request.getContextPath()%>/getRes/lecture/image2" name="img2show" onclick="img2Delete()" style="width:110px; height:110px;" />
+													<input type="hidden" name="img2Uploadedbool" value="true" />
 													<% } %>
-													<input type="file" name="" />
+													<input type="file" name="img2" onclick="ip2Test(event)" onchange="img2Uploaded()" />
 												</div>	
 											</div>
 										</div>
 										<p class="depth_p"></p>
-										<% } %>
-										
+										<% } %>	
 									</div>
 									
 
 									<div class="container" style="justify-content:flex-end;">
-										<input type="button" value="Submit" class="btn btn_primary" style="width:100px; margin-right:5px;" onclick="prevTest()" />
-										<input type="submit" value="Cancel" class="btn btn_secondary" style="width:100px;" />
+										<% if(isAdd == true) { %>
+											<input type="button" value="Submit" class="btn btn_primary" style="width:100px; margin-right:5px;" onclick="prevTest()" />
+										<% } else { %>
+											<input type="button" value="Submit" class="btn btn_primary" style="width:100px; margin-right:5px;" onclick="reviseTest()" />
+											<script>
+												function reviseTest() {
+													var resCode = prevValidate();
+													var changedFields = document.getElementsByName("changedFields")[0];
+													if(resCode != -1) {
+														var title = document.getElementsByName("title")[0].value;
+														var content = document.getElementsByName("content")[0].value;
+														var vid_title = document.getElementsByName("vid_title")[0].value;
+														var vid_url = document.getElementsByName("vid_url")[0].value;
+														var code = document.getElementsByName("code")[0].value;
+														var summary = document.getElementsByName("summary")[0].value;
+														var vid_title2 = document.getElementsByName("vid_title2")[0].value;
+														var vid_url2 = document.getElementsByName("vid_url2")[0].value;
+														var code2 = document.getElementsByName("code2")[0].value;
+														var summary2 = document.getElementsByName("summary2")[0].value;
+														
+														var img1Chbool = document.getElementsByName("img1Changedbool")[0].value;
+														var img2Chbool = document.getElementsByName("img2Changedbool")[0].value;
+														<%
+															String title = "\'" + lecture.getTitle() + "\'";
+															String content = (lecture.getContent() == null || lecture.getContent().equals(""))?"\'" + "" + "\'":"\'" + lecture.getContent() + "\'";
+															String vid_title = "\'" + lecture.getVid_title() + "\'";
+															String vid_url = "\'" + lecture.getVid_url() + "\'";
+															String code = (lecture.getCode() == null || lecture.getCode().equals(""))?"\'" + "" + "\'":"\'" + lecture.getCode() + "\'";
+															String summary = (lecture.getSummary() == null || lecture.getSummary().equals(""))?"\'" + "" + "\'":"\'" + lecture.getSummary() + "\'";
+															
+															String vid_title2 = (lecture.getVid_title2() == null || lecture.getVid_title2().equals(""))?"\'" + "" + "\'":"\'" + lecture.getVid_title2() + "\'";
+															String vid_url2 = (lecture.getVid_url2() == null || lecture.getVid_url2().equals(""))?"\'" + "" + "\'":"\'" + lecture.getVid_url2() + "\'";
+															String code2 = (lecture.getCode2() == null || lecture.getCode2().equals(""))?"\'" + "" + "\'":"\'" + lecture.getCode2() + "\'";
+															String summary2 = (lecture.getSummary2() == null || lecture.getSummary2().equals(""))?"\'" + "" + "\'":"\'" + lecture.getSummary2() + "\'";
+														%>
+														if((title==<%=title%>)&&(content==<%=content%>)&&(vid_title==<%=vid_title%>)&&(vid_url==<%=vid_url%>)&&(code==<%=code%>)&&(summary==<%=summary%>)&&(vid_title2==<%=vid_title2%>)&&(vid_url2==<%=vid_url2%>)&&(code2==<%=code2%>)&&(summary2==<%=summary2%>)&&(img1Chbool=='false')&&(img2Chbool=='false')) {
+															alert("변경사항을 입력해주세요.");
+															return;
+														}
+														var fields = [title, content, vid_title, vid_url, code, summary, vid_title2, vid_url2, code2, summary2];
+														var values = [<%=title%>, <%=content%>, <%=vid_title%>, <%=vid_url%>, <%=code%>, <%=summary%>, <%=vid_title2%>, <%=vid_url2%>, <%=code2%>, <%=summary2%>];
+														var labels = ["title", "content", "vid_title", "vid_url", "code", "summary", "vid_title2", "vid_url2", "code2", "summary2"];
+														var collection = "";
+														for(var i = 0; i < fields.length; i++)
+															if(fields[i] != values[i]) collection += labels[i] + ",";
+														changedFields.value = collection;
+														var form = document.getElementsByClassName("form_update_profile")[0];
+														if(form != null) form.submit();
+													}
+												}
+											</script>
+										<% } %>
+										
+										<input type="reset" value="Cancel" class="btn btn_secondary" style="width:100px;" />
 									</div>
 
 								</div>

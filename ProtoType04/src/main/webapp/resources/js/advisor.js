@@ -1,6 +1,15 @@
+var img1 = false; // 이미지가 업로드 되었으면 true로 바뀝니다.
 var img2 = false; // 게시글 추가에 쓰이는 boolean 항목입니다.
 
 function prevTest() {
+	var resCode = prevValidate();
+	if(resCode != -1) {
+		var form = document.getElementsByClassName("form_update_profile")[0];
+		if(form != null) form.submit();
+	}
+}
+
+function prevValidate() {
 	var warnings = document.getElementsByClassName("warning_message");
 	var title = document.getElementsByName("title")[0];
 	var vid_title = document.getElementsByName("vid_title")[0];
@@ -26,7 +35,7 @@ function prevTest() {
 			warnings[2].innerHTML = "동영상 URL을 등록해주세요.";
 			if(isit == false) vid_url.focus();
 		}
-		return;	
+		return -1;	
 	} else if((vid_title2 == null || vid_title2.value == "") || (vid_url2 == null || vid_url2.value == "")) {
 		var code2 = document.getElementsByName("code2")[0];
 		var summary2 = document.getElementsByName("summary2")[0];
@@ -41,11 +50,9 @@ function prevTest() {
 				warnings[4].innerHTML = "동영상 URL을 등록해주세요.";
 				if(isit == false) vid_url2.focus();
 			}
-			return;
+			return -1;
 		}
 	} 
-	var form = document.getElementsByClassName("form_update_profile")[0];
-	if(form != null) form.submit();
 }
 
 function ip2FirstTest(event) {
@@ -108,6 +115,52 @@ function ip2Test(event) {
 	}
 }
 
+function img1Uploaded() {
+	var img1Chbool = document.getElementsByName("img1Changedbool")[0];
+	img1Chbool.value = "true";
+	img1 = true;
+}
+
 function img2Uploaded() {
+	var img2Chbool = document.getElementsByName("img2Changedbool")[0];
+	img2Chbool.value = "true";
 	img2 = true;
+}
+
+function getProjectName() {
+	var pathname = window.location.pathname;
+	var parse = pathname.split("/");
+	return "/" + parse[1];
+}
+
+function img1Delete() {
+	var img1show = document.getElementsByName("img1show")[0];
+	var img1bool = document.getElementsByName("img1Uploadedbool")[0];
+	var img1Chbool = document.getElementsByName("img1Changedbool")[0];
+	var contextPath = getProjectName();
+	if(img1bool.value == "true") {
+		var b = confirm("이 이미지를 삭제하시겠습니까?");
+		if(b == true) {
+			img1show.src = contextPath + "/resources/images/gray_50.jpg";
+			img1bool.value = "false";
+			img1Chbool.value="true";
+			alert("변경이 완료되었습니다.");
+		}
+	}	
+}
+
+function img2Delete() {
+	var img2show = document.getElementsByName("img2show")[0];
+	var img2bool = document.getElementsByName("img2Uploadedbool")[0];
+	var img2Chbool = document.getElementsByName("img2Changedbool")[0];
+	var contextPath = getProjectName();
+	if(img2bool.value == "true") {
+		var b = confirm("이 이미지를 삭제하시겠습니까?");
+		if(b == true) {
+			img2show.src = contextPath + "/resources/images/gray_50.jpg";
+			img2bool.value = "false";
+			img2Chbool.value="true";
+			alert("변경이 완료되었습니다.");
+		}
+	}	
 }

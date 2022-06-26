@@ -2,6 +2,7 @@ package section01;
 
 import java.sql.*;
 import java.util.*;
+import java.text.*;
 import javax.naming.*;
 import javax.sql.DataSource;
 
@@ -47,6 +48,37 @@ public class LectureDAO {
 		} catch(SQLException e) { System.out.println("LectureDAO : SQL Exception(getLecturesCount)"); }
 		return count;
 	}
+	
+	public int updateData(int[] idxArr, Object[] objArr, String categoryName, String lectureNum) {
+        String[] labels = {"scat_num", "title", "content", "vid_title", "vid_url", "code", "summary", "img", "writeDate", "vid_title2", "vid_url2", "code2", "summary2", "img2"};
+        //					   1          2         3           4           5        6         7       8          9            10            11        12        13        14
+        int res = -1;
+        Vector<Integer> updatedIdx = new Vector<Integer>();
+        StringBuffer sql = new StringBuffer(String.format("update %s_TBL set ", categoryName));
+        for(int i = 0; i < idxArr.length; i++) {
+            if(idxArr[i] != -1) {
+                sql.append(labels[i] + "=?");
+                sql.append(", ");
+                updatedIdx.add(i + 1); // pstmt용 : 원소가 1부터 시작
+            }
+        }
+        String sqlStr = sql.substring(0, sql.length()-2);
+        sqlStr += String.format(" where scat_num=%s", lectureNum);
+        try(
+        	Connection conn = dataFactory.getConnection();
+    		PreparedStatement pstmt = conn.prepareStatement(sqlStr.toString());	
+        ) {
+	        for(int j=1; j <= updatedIdx.size(); j++) {
+	            int targetIdx = updatedIdx.get(j-1);
+	            if(targetIdx == 8 || targetIdx == 14) pstmt.setBlob(j, (Blob)objArr[targetIdx-1]);
+	            else if(targetIdx == 1) pstmt.setInt(j, (int)objArr[targetIdx-1]);
+	            else if(targetIdx == 9) pstmt.setDate(j, (java.sql.Date)objArr[targetIdx-1]);
+	            else pstmt.setString(j, (String)objArr[targetIdx-1]);  
+	        }
+	        res = pstmt.executeUpdate();
+        } catch(SQLException e) { e.printStackTrace(); System.out.println("LectureDAO : SQL Exception(updateData)"); }
+        return res;
+    }
 	
 	public int deleteLecture(String categoryName, String lectureNum, int total) {
 		int count = 0;

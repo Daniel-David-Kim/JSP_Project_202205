@@ -36,5 +36,9 @@ public class LectureService {
 	public int addLecture(LectureBean bean, String categoryName) {
 		return dao.insertLecture(bean, categoryName);
 	}
+	
+	public int reviseLecture(int[] idxArr, Object[] objArr, String categoryName, String lectureNum) {
+		return dao.updateData(idxArr, objArr, categoryName, lectureNum);
+	}
 
 }

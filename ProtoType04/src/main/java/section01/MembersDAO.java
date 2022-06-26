@@ -1,8 +1,7 @@
 package section01;
 
 import java.sql.*;
-import java.util.Vector;
-
+import java.util.*;
 import javax.servlet.*;
 import javax.sql.DataSource;
 import javax.servlet.annotation.*;
@@ -24,6 +23,24 @@ public class MembersDAO {
 			System.out.println("MembersDAO : Naming Exception");
 		}
 	}
+	
+	public HashMap<String, Object> getOneMemberIdName(String m_id) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		try(
+			Connection conn = dataFactory.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement("select m_id, m_name, m_profile from members where m_id=?");
+		) {
+			pstmt.setString(1, m_id);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				result.put("id", rs.getString(1));
+				result.put("name", rs.getString(2));
+				result.put("profile", rs.getBlob(3));
+			}
+			rs.close();
+		} catch(SQLException e) {System.out.println("MembersDAO : SQL Exception (getOneMemberIdName)");}
+		return result;
+	}
 
 	public void allMembersList() {
 		try {
@@ -42,31 +59,27 @@ public class MembersDAO {
 		}
 	}
 
-	public int MemberIP(String id, String pw) {
-		String id1 = id;
-		String pw1 = pw;
+	public HashMap<String, Object> MemberIP(String id, String pw) {
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		MemberBean bean = null;
 		int count = 0;
-
 		try {
 			conn = dataFactory.getConnection();
 			stmt = conn.createStatement();
-			ResultSet cur = stmt.executeQuery("select * from members");
-
+			ResultSet cur = stmt.executeQuery(String.format("select * from members where m_id='%s' and m_pw='%s'", id, pw));
+			
 			while (cur.next()) {
-				if (id1.equals(cur.getString(1)) && pw1.equals(cur.getString(2)))
-					count = 1;
-
+				//if (id1.equals(cur.getString(1)) && pw1.equals(cur.getString(2)))
+				bean = new MemberBean(cur.getString(1), cur.getString(2), cur.getString(3), cur.getString(4), cur.getString(5), cur.getString(6), cur.getBlob(7), cur.getInt(8));
+				count++;
 			}
-			System.out.println(3);
 			cur.close();
 			stmt.close();
 			conn.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("MembersDAO : SQL Exception");
-		}
-		return count;
-
+		} catch (SQLException e) {System.out.println("MembersDAO : SQL Exception");}
+		result.put("count", count);
+		result.put("member", bean);
+		return result;
 	}
 	
 	// 아이디랑 핸드폰 한번에 중복 체크하기 
@@ -142,6 +155,8 @@ public class MembersDAO {
 				e.printStackTrace();
 			}
 		}
+		
+		
 }
 
 /*

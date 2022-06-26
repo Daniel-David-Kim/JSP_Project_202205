@@ -46,7 +46,18 @@ public class ResourceController extends HttpServlet {
 				bos.flush();
 				bis.close();
 				bos.close();
-			} catch(SQLException e) { System.out.println("SQLException : ResourceController"); }
+			} catch(SQLException e) { System.out.println("SQLException : ResourceController : image image2"); }
+		} else if(pathInfo.equals("/lecture/profileAuthor")) {
+			Blob profile = (Blob)app.getAttribute("profileAuthor");
+			try {
+				BufferedInputStream bis = new BufferedInputStream(profile.getBinaryStream());
+				byte[] buffer = new byte[512];
+				while(bis.read(buffer) != -1) bos.write(buffer);
+				bos.flush();
+				bis.close();
+				bos.close();
+				app.removeAttribute("profileAuthor");
+			} catch(SQLException e) { System.out.println("SQL Exception : ResourceController : profileAuthor"); }
 		}
 		
 	}

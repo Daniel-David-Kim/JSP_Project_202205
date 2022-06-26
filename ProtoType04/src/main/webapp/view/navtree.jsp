@@ -2,6 +2,7 @@
 <%
 	request.setCharacterEncoding("utf-8");
 	HashMap<String, Vector<MenusBean>> menus = (HashMap<String, Vector<MenusBean>>)request.getAttribute("menus");
+	String author = (String)request.getAttribute("author");
 %>
 <nav class="navbar"><!--nav.navbar-->
 	<ul class="nav">

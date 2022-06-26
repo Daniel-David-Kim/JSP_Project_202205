@@ -4,6 +4,7 @@
 	request.setCharacterEncoding("utf-8");
 	HashMap<String, Object> lectureResult = (HashMap<String, Object>)request.getAttribute("lectureResult");
 	String lectureAddStr = (String)application.getAttribute("lectureAdd");
+	String lectureReviseStr = (String)application.getAttribute("lectureRevise");
 %>
 <% 
 	if(lectureAddStr != null && !lectureAddStr.equals("")) {
@@ -15,6 +16,17 @@
 	    }
 	} 
     application.removeAttribute("lectureAdd");
+%>
+<% 
+	if(lectureReviseStr != null && !lectureReviseStr.equals("")) {
+		boolean lectureRevise = Boolean.parseBoolean(lectureReviseStr);
+		if(lectureRevise == true) {
+%> 			<script>alert("강의 수정에 성공했습니다.");</script>
+	 <% } else { %> <script>alert("강의 수정에 실패했습니다.");</script>
+<%  
+	    }
+	} 
+    application.removeAttribute("lectureRevise");
 %>
 <!DOCTYPE html>
 <html>
@@ -33,7 +45,6 @@
 
 			<div class="page_wrapper"><!--div.page_wrapper : 강의 페이지, 그 외에 왼쪽 날개(left wing)가 필요한 페이지에서 왼쪽 날개를 배치시키기 위한, 감싸주는 컨테이너입니다.-->
 				<jsp:include page="leftWing.jsp" />
-				
 				<div class="lecture_container"><!--div.lecture_container : 우측에 강의 내용이 올라오는 컨테이너입니다.-->
 
 					<article class="article_main" style="padding-left:40px; padding-right:130px;"><!--article.article_main : 인트로 페이지의 그 article.article_main 맞습니다. 다만, 왼쪽 날개에 맞게 style에서 padding을 조정했습니다. -->
@@ -43,12 +54,10 @@
 							LectureBean lecture = (LectureBean)lectureResult.get("one");
 							application.setAttribute("lectureNum", lecture.getScat_num());
 						%>
-						
 									
 						<form id="hidden">
 							<input type="hidden" name="lecture_num" value="<%=lecture.getScat_num()%>" />
 						</form>
-						
 						
 						<h1 class="lecture_title"><%=lecture.getTitle()%></h1>
 						<span class="lecture_date_shower"><%=lecture.getWriteDate()%></span>
@@ -143,12 +152,7 @@
 							</pre>
 							<p class="depth_p"></p><!--pre.dynamic_phrase-->
 						<% } %>
-						
-						
-						
-						
-						
-											
+														
 
 					</article><!--article.article_main-->
 
@@ -168,11 +172,8 @@
 
 				</div><!--div.lecture_container-->
 			</div><!--div.page_wrapper-->
-
-
-			
+	
 		</div><!--div.article_container-->
 	</div><!--div.whole-->
-
 </body>
 </html>

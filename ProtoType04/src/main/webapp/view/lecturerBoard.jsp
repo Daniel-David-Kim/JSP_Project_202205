@@ -1,4 +1,22 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" import="java.util.*, section01.*" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" import="java.util.*, section01.*, java.sql.*" %>
+<%
+	request.setCharacterEncoding("utf-8");
+	HashMap<String, Object> authorInfo = (HashMap<String, Object>)request.getAttribute("authorInfo");
+	application.setAttribute("author_id", (String)authorInfo.get("id"));
+	HashMap<String, Object> articles = (HashMap<String, Object>)request.getAttribute("articles");
+	int allArticles = (int)articles.get("AllArticles");
+	int currentPage = (int)articles.get("currentPage");
+	int startNo = ((currentPage-1)*10) + 1; // 이 페이지를 시작할 게시글 번호
+	
+	int startPage = (int)((currentPage-1)/ 10.0) * 10 + 1;
+	int currentResultRows = (int)articles.get("resultRows");
+	int totalPages = (int)(allArticles/10.0) + 1;
+	Vector<BoardBean> articleList = (Vector<BoardBean>)articles.get("articles");
+	
+	System.out.println("currentPage = " + currentPage);
+	System.out.println("startPage = " + startPage);
+	System.out.println("currentRows = " + currentResultRows);
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,21 +40,20 @@
 
 					<hr width="288" style="height:1px; background-color:#BCBEC0; margin-top:9px;"><!--hr:밑줄 라인-->
 					<div class="lecturer"><!-- div.lecturer : 강의자의 프로필을 보여준다. -->
-						<img src="<%=request.getContextPath()%>/resources/images/profile1.png" class="lecturer_profile" width=57 height=57 />
+						<% if(authorInfo.get("profile") == null) { %>
+							<img src="<%=request.getContextPath()%>/resources/images/profile1.png" class="lecturer_profile" width=57 height=57 />
+						<% } else { 
+							Blob profile = (Blob)authorInfo.get("profile");
+							application.setAttribute("profileAuthor", profile);
+						%>
+							<img src="<%=request.getContextPath()%>/getRes/lecture/profileAuthor" class="lecturer_profile" width=57 height=57 />
+						<% } %>
 						<div class="lecturer_info">
 							<div class="lecturer_class">강의자</div>
-							<div class="lecturer_name">나도코딩</div>
+							<div class="lecturer_name"><%=(String)authorInfo.get("name")%></div>
 						</div>
 					</div><!-- div.lecturer -->
-					<hr width="288" style="height:1px; background-color:#BCBEC0;"><!--hr:밑줄 라인-->
-					<!--div id="lecturer_link"--><!-- div#lecturer_link : 강의자로 로그인하면 활성화되는 메뉴 : 현재는 display:none으로 되어있지만, display:flex로 하면 다시 나타난다! -->
-						<!--a href="#">강의 수정</a>
-						<a href="#">강의 삭제</a>
-					</div--><!-- div#lecturer_link -->
-					<!--div id="user_link"--><!-- div#user_link : 사용자로 로그인하면 활성화되는 메뉴 : display:none으로 하면 사라지고, display:flex로 하면 다시 나타난다. -->
-						<!--a href="#">강의자 Q&A</a>
-					</div--><!-- div#lecturer_link -->
-
+					<hr width="288" style="height:1px; background-color:#BCBEC0;">
 				</div>
 
 				<div class="lecture_container"><!--div.lecture_container : 우측에 강의 내용이 올라오는 컨테이너입니다.-->
@@ -46,45 +63,55 @@
 						<div class="container"><!--p.container : 부트스트랩의 div.container과 유사하게 만들었습니다. 안에 들어가는 내용물들을 중앙으로 정렬시킵니다.-->
 							<table class="table">
 								<tr class="tablerow headrow"><th class="numcol">번호</th><th class="titlecol">제목</th><th class="authorcol">작성자</th><th class="datecol">작성일</th></tr>
-								<tr class="tablerow rowdip"><td class="numcol">123456789101112123123123</td><td class="titlecol"><a href="#">이 강의에 대해 질문 있습니다! 긴급! 중요함!이 강의에 대해 질문 있습니다! 긴급! 중요함!
-								이 강의에 대해 질문 있습니다! 긴급! 중요함!</a></td><td class="authorcol bauthor">administratoradministrator</td><td class="datecol">2022-03-02</td></tr>
-								<tr class="tablerow rowwhite"><td class="numcol">123456789101112123123123</td><td class="titlecol"><a href="#">이 강의에 대해 질문 있습니다! 긴급! 중요함!이 강의에 대해 질문 있습니다! 긴급! 중요함!
-								이 강의에 대해 질문 있습니다! 긴급! 중요함!</a></td><td class="authorcol bauthor">administratoradministrator</td><td class="datecol">2022-03-02</td></tr>
-								<tr class="tablerow rowdip"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowwhite"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowdip"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowwhite"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowdip"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowwhite"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowdip"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowwhite"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowdip"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowwhite"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowdip"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowwhite"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowdip"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowwhite"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowdip"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowwhite"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowdip"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
-								<tr class="tablerow rowwhite"><td class="numcol"></td><td class="titlecol"></td><td class="authorcol bauthor"></td><td class="datecol"></td></tr>
+								
+								<% for(int i = 0; i < articleList.size(); i++) { 
+										BoardBean article = articleList.get(i);
+										if(i % 2 == 0) {
+								%>
+									<tr class="tablerow rowdip"><td class="numcol"><%=startNo + i%></td><td class="titlecol titlecolrows"><a href="<%=request.getContextPath()%>">
+										<% for(int j = 0; j < article.getDepth()-1; j++) { %><span style="padding-right:20px;"></span><% } %>
+										<% if(article.getDepth() > 1) { %><span class="reply_board">[답글]</span><% } %>
+										<%=article.getTitle()%></a></td><td class="authorcol bauthor"><%=article.getM_id()%></td><td class="datecol"><%=article.getWriteDate()%></td></tr>
+								<% 		} else { %>
+									<tr class="tablerow rowwhite"><td class="numcol"><%=startNo + i%></td><td class="titlecol titlecolrows"><a href="<%=request.getContextPath()%>">
+										<% for(int j = 0; j < article.getDepth()-1; j++) { %><span style="padding-right:20px;"></span><% } %>
+										<% if(article.getDepth() > 1) { %><span class="reply_board">[답글]</span><% } %>
+										<%=article.getTitle()%></a></td><td class="authorcol bauthor"><%=article.getM_id()%></td><td class="datecol"><%=article.getWriteDate()%></td></tr>
+								<% 		}
+								   }
+								%>
 							</table>
 						</div>	
 						<div class="container">
+							<div class="board_add_btn_container">
+								<button class="btn btn_primary" style="width:80px;" onclick="addQuestion()">Write</button>
+								<script>
+									function addQuestion() {
+										location.href = "<%=request.getContextPath()%>/board/lectureBoard/newQuestion";
+									}
+								</script>
+							</div>
+						</div>
+						<div class="container">
 							<div class="table_pages">
 								<ul class="page_list">
-									<li><a href="#" class="page_l">이전</a></li>
-									<li><a href="#" class="page_l">1</a></li>
-									<li><a href="#" class="page_l">2</a></li>
-									<li><a href="#" class="page_l">3</a></li>
-									<li><a href="#" class="page_l">4</a></li>
-									<li><a href="#" class="page_l">5</a></li>
-									<li><a href="#" class="page_l">6</a></li>
-									<li><a href="#" class="page_l">7</a></li>
-									<li><a href="#" class="page_l">8</a></li>
-									<li><a href="#" class="page_l">9</a></li>
-									<li><a href="#" class="page_l">10</a></li>
-									<li><a href="#">다음</a></li>
+									<% if(currentPage - 10 > 0) { %>
+										<li><a href="<%=request.getContextPath()%>/board/lectureBoard/page/<%=startPage%>/<%=((startPage-1)*10) + 1%>/prev" class="page_l">이전</a></li>
+									<% }
+									   for(int i = 0; i < 10; i++) { 
+									   		if((startPage + i) <= (totalPages)) {
+									   			if((startPage + i) == currentPage) {
+									   %>
+											<li><a href="<%=request.getContextPath()%>/board/lectureBoard/page/<%=startPage + i%>/<%=((startPage-1 + i)*10) + 1%>" class="page_l curPage"><%=startPage + i%></a></li>
+											<% } else { %>
+											<li><a href="<%=request.getContextPath()%>/board/lectureBoard/page/<%=startPage + i%>/<%=((startPage-1 + i)*10) + 1%>" class="page_l"><%=startPage + i%></a></li>
+									<%			 
+											   }
+									   		}
+									   } %>
+									<% if(totalPages > 10 && (currentPage < totalPages)) { %>
+										<li><a href="<%=request.getContextPath()%>/board/lectureBoard/page/<%=startPage + 9%>/<%=((startPage-1 + 9)*10) + 1%>/next">다음</a></li>
+									<% } %>
 								</ul>
 							</div>
 						</div>

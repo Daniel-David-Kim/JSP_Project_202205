@@ -5,6 +5,7 @@ import java.sql.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import java.util.stream.*;
 import javax.sql.rowset.serial.*;
 import javax.servlet.annotation.*;
 import org.apache.commons.fileupload.*;
@@ -44,6 +45,7 @@ public class LectureController extends HttpServlet {
 		PrintWriter out = res.getWriter();
 		LectureService lectureService = new LectureService();
 		MenusService menusService = new MenusService();
+		MembersService membersService = new MembersService();
 		ServletContext app = req.getServletContext();
 		HashMap<String, Vector<MenusBean>> menus = menusService.getSplitedCategory();
 		
@@ -55,7 +57,12 @@ public class LectureController extends HttpServlet {
 		
 		int scat = 1;
 		if(divs.length > 2) scat = Integer.parseInt(divs[2]);
-		String categoryName = menusService.getCategoryName(bcat);
+		MenusBean targetMenu = menusService.getCategory(bcat);
+		String author_id = targetMenu.getM_id();
+		HashMap<String, Object> authorInfo = membersService.getAuthorInfo(author_id);
+		String categoryName = "";
+		if(targetMenu != null) categoryName = targetMenu.getMenu_name();
+		
 		
 		// 새로운 페이지로 가는 url
 		String goTo = "";
@@ -65,6 +72,7 @@ public class LectureController extends HttpServlet {
 		if((divs.length > 3) && divs[3].equals("addLecture")) {
 			req.setAttribute("add", "true");
 			req.setAttribute("categoryCode", bcat);
+			req.setAttribute("authorInfo", authorInfo);
 			goTo = "/view/addLecture.jsp";
 		} else if ((divs.length > 3) && divs[3].equals("addLecture_process")) {
 			String title = null; String content = null; String vid_title = null; String vid_url = null; String code = null; String summary = null;
@@ -125,8 +133,6 @@ public class LectureController extends HttpServlet {
 			
 			
 		} else if ((divs.length > 3) && divs[3].equals("reviseLecture")) {
-			
-			
 			req.setAttribute("add", "false");
 			req.setAttribute("categoryCode", bcat);
 			int lectureNum = (int)app.getAttribute("lectureNum");
@@ -140,14 +146,90 @@ public class LectureController extends HttpServlet {
 				req.setAttribute("categoryCode", bcat);
 				req.setAttribute("lectureResult", lectureResult);
 				req.setAttribute("menus", menus);
+				req.setAttribute("lectureNum", 1);
+				req.setAttribute("authorInfo", authorInfo);
 			} else {
 				req.setAttribute("resultCode", "ok");
 				req.setAttribute("categoryCode", bcat);
 				req.setAttribute("lectureResult", lectureResult);
 				req.setAttribute("menus", menus);
+				req.setAttribute("lectureNum", lectureNum);
+				req.setAttribute("authorInfo", authorInfo);
 			}
 			goTo = "/view/addLecture.jsp";
 			
+		} else if ((divs.length > 3) && divs[3].equals("reviseLecture_process")) {
+			System.out.println("in process : revise");
+			String title = null; String content = null; String vid_title = null; String vid_url = null; String code = null; String summary = null;
+			String vid_url2 = null; String code2 = null; String summary2 = null; String vid_title2 = null; Blob img1 = null; Blob img2 = null; String lectureNumStr = null;
+			String img1Changedbool = null; boolean img1Changed = false; String img2Changedbool = null; boolean img2Changed = false; String changedFields = null;
+			Vector<String> changed = new Vector();
+			int[] idxArr = new int[14];
+            Object[] objArr = new Object[14];
+            for(int i = 0; i < idxArr.length; i++) {idxArr[i] = -1; objArr[i] = null;}
+            int idx = -1;
+			
+			File imgd = new File(imgPath);
+			DiskFileItemFactory factory = new DiskFileItemFactory();
+			factory.setRepository(imgd);
+			factory.setSizeThreshold(1024*1024);
+			ServletFileUpload upload = new ServletFileUpload(factory);
+			try {
+				List<FileItem> items = upload.parseRequest(req);
+				for(FileItem item : items) {
+					if(item.isFormField()) {
+						int tempidx = -1;
+						Object target = null;
+						String field = item.getFieldName();
+						switch(field) {
+							case "title": if(changed.contains(field)) {title = item.getString("utf-8"); tempidx = 1; target = title;} break;
+							case "content": if(changed.contains(field)) {content = item.getString("utf-8"); tempidx = 2; target = content;}  break;
+							case "vid_title": if(changed.contains(field)) {vid_title = item.getString("utf-8"); tempidx = 3; target = vid_title;} break;
+							case "vid_url": if(changed.contains(field)) {vid_url = item.getString("utf-8"); tempidx = 4; target = vid_url;} break;
+							case "code": if(changed.contains(field)) {code = item.getString("utf-8"); tempidx = 5; target = code;} break;
+							case "summary": if(changed.contains(field)) {summary = item.getString("utf-8"); tempidx = 6; target = summary;} break;
+							case "vid_title2": if(changed.contains(field)) {vid_title2 = item.getString("utf-8"); tempidx = 9; target = vid_title2;} break;
+							case "vid_url2": if(changed.contains(field)) {vid_url2 = item.getString("utf-8"); tempidx = 10; target = vid_url2;} break;
+							case "code2": if(changed.contains(field)) {code2 = item.getString("utf-8"); tempidx = 11; target = code2;} break;
+							case "summary2": if(changed.contains(field)) {summary2 = item.getString("utf-8"); tempidx = 12; target = summary2;} break;
+							case "img1Changedbool" : img1Changedbool = item.getString("utf-8"); img1Changed = Boolean.parseBoolean(img1Changedbool); break;
+							case "img2Changedbool" : img2Changedbool = item.getString("utf-8"); img2Changed = Boolean.parseBoolean(img2Changedbool); break;
+							case "lectureNum" : lectureNumStr = item.getString("utf-8"); break;
+							case "changedFields" : changedFields = item.getString("utf-8"); String[] temp = changedFields.split(","); 
+								changed = Arrays.stream(temp).collect(Collectors.toCollection(Vector::new)); System.out.println(changed); break;
+						}
+						if(tempidx != -1) {
+							idxArr[tempidx] = 1;
+							objArr[tempidx] = target;
+						}
+					} else {
+						if((item.getFieldName().equals("img")&&(img1Changed == true))||(item.getFieldName().equals("img2")&&(img2Changed == true))) {
+							BufferedInputStream bis = new BufferedInputStream(item.getInputStream());
+							ByteArrayOutputStream baos = new ByteArrayOutputStream();
+							byte[] buffer = new byte[512];
+							while(bis.read(buffer) != -1) baos.write(buffer);
+							byte[] resArr = baos.toByteArray();
+							try {
+								Blob target = null;
+								if(resArr.length != 0) target = new SerialBlob(resArr);
+								int tempidx = -1;
+								if(item.getFieldName().equals("img")) tempidx = 7;
+								else tempidx = 13;
+								
+								idxArr[tempidx] = 1;
+								objArr[tempidx] = target;
+							} catch(SQLException e) {System.out.println("Blob create failed : LectureController(reviseLecture_process)");}
+						}	
+					}
+				}
+				// 필드 처리 완료. 처리 로직 밑에다가 작성.
+				
+				int result = lectureService.reviseLecture(idxArr, objArr, categoryName, lectureNumStr);
+				if(result == 1) app.setAttribute("lectureRevise", "true");
+				else app.setAttribute("lectureRevise", "false");
+				goTo = req.getContextPath() + "/lecture/" + String.valueOf(bcat) + "/" + lectureNumStr;
+				toDispatch = false;
+			} catch(FileUploadException e) {System.out.println("File upload Exception : LectureController(reviseLecture_process)");}
 			
 		} else if ((divs.length > 3) && divs[3].equals("deleteLecture")) {
 			System.out.println("delete");
@@ -177,6 +259,7 @@ public class LectureController extends HttpServlet {
 				req.setAttribute("categoryCode", bcat);
 				req.setAttribute("lectureResult", lectureResult);
 				req.setAttribute("menus", menus);
+				req.setAttribute("authorInfo", authorInfo);
 				goTo = "/view/lecture.jsp";
 			} else { // 4
 				System.out.println("ok");
@@ -184,6 +267,7 @@ public class LectureController extends HttpServlet {
 				req.setAttribute("categoryCode", bcat);
 				req.setAttribute("lectureResult", lectureResult);
 				req.setAttribute("menus", menus);
+				req.setAttribute("authorInfo", authorInfo);
 				goTo = "/view/lecture.jsp";
 			}
 		} 

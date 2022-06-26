@@ -24,4 +24,10 @@ public class MenusService {
 		if(target != null) return target.getMenu_name();
 		else return null;
 	}
+	
+	public MenusBean getCategory(int bcat) {
+		MenusBean target = dao.getOneCategory(bcat);
+		return target;
+	}
+	
 }

@@ -6,11 +6,6 @@
 	<title>Edit Profile Plus</title>
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/template.css" />
 	<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/intro.js"></script>
-	<script>
-		function intro() {
-			location.href="./intro.html";
-		}
-	</script>
 </head>
 <body>
 	<jsp:include page="header.jsp" />
@@ -20,32 +15,7 @@
 
 			<div class="page_wrapper"><!--div.page_wrapper : 강의 페이지, 그 외에 왼쪽 날개(left wing)가 필요한 페이지에서 왼쪽 날개를 배치시키기 위한, 감싸주는 컨테이너입니다.-->
 
-				<div class="left_wing"><!--div.left_wing : 좌측에 강의 목록 나오죠? 그거입니다!-->
-					<ul class="lectures_container">
-						<li class="lecture_list"><a href="<%=request.getContextPath()%>/account/accountInfo" class="lecture_link">회원 정보</a></li>
-						<li class="lecture_list"><a href="<%=request.getContextPath()%>/account/editProfile" class="lecture_link">회원 정보 수정</a></li>
-						<li class="lecture_list"><a href="<%=request.getContextPath()%>/account/lectureBoard" class="lecture_link">강의자 게시판</a></li>
-						<li class="lecture_list"><a href="<%=request.getContextPath()%>/account/adminBoard" class="lecture_link">회원 관리</a></li>	
-					</ul>
-
-					<!--hr width="288" style="height:1px; background-color:#BCBEC0; margin-top:9px;"--><!--hr:밑줄 라인-->
-					<!--div class="lecturer"--><!-- div.lecturer : 강의자의 프로필을 보여준다. -->
-						<!--img src="./resources/images/profile1.png" class="lecturer_profile" width=57 height=57 />
-						<div class="lecturer_info">
-							<div class="lecturer_class">강의자</div>
-							<div class="lecturer_name">나도코딩</div>
-						</div>
-					</div--><!-- div.lecturer -->
-					<!--hr width="288" style="height:1px; background-color:#BCBEC0;"--><!--hr:밑줄 라인-->
-					<!--div id="lecturer_link"--><!-- div#lecturer_link : 강의자로 로그인하면 활성화되는 메뉴 : 현재는 display:none으로 되어있지만, display:flex로 하면 다시 나타난다! -->
-						<!--a href="#">강의 수정</a>
-						<a href="#">강의 삭제</a>
-					</div--><!-- div#lecturer_link -->
-					<!--div id="user_link"--><!-- div#user_link : 사용자로 로그인하면 활성화되는 메뉴 : display:none으로 하면 사라지고, display:flex로 하면 다시 나타난다. -->
-						<!--a href="#">강의자 Q&A</a>
-					</div--><!-- div#lecturer_link -->
-
-				</div>
+				<jsp:include page="leftWingAccount.jsp" />
 
 				<div class="lecture_container"><!--div.lecture_container : 우측에 강의 내용이 올라오는 컨테이너입니다.-->
 

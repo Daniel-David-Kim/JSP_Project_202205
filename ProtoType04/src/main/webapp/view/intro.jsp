@@ -3,6 +3,21 @@
 <%
 	request.setCharacterEncoding("utf-8");
 	String resultCode = (String)application.getAttribute("resultCode");
+	String loginResult = (String)session.getAttribute("loginResult");
+%>
+<% if(loginResult != null && !loginResult.equals("")) { 
+		boolean loginResultBool = Boolean.parseBoolean(loginResult);
+		if(loginResultBool == true) {
+			String uname = (String)session.getAttribute("uname");
+%>
+		<script>alert("<%=uname%>님! 환영합니다!");</script>	
+	 <% } else { 
+	 	String errorMsg = (String)session.getAttribute("errorLogin");
+	 %>
+	 	<script>alert(<%=errorMsg%>);</script>
+<%      }
+		session.removeAttribute("loginResult");
+   } 
 %>
 <!DOCTYPE html>
 <html>

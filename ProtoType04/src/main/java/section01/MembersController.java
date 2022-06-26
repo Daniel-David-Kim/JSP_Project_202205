@@ -1,6 +1,7 @@
 package section01;
 
 import java.io.*;
+import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -33,7 +34,6 @@ public class MembersController extends HttpServlet {
 		PrintWriter out = res.getWriter();
 		MembersService service = new MembersService();
 		
-		
 		String pathInfo = req.getPathInfo();
 
 		// 새로운 페이지로 가는 url
@@ -45,18 +45,38 @@ public class MembersController extends HttpServlet {
 			goTo = "/view/login.jsp";
 		} else if(pathInfo.equals("/login_process")) {
 			String id = req.getParameter("id");
-			System.out.println(id);
 			String pw = req.getParameter("pw");
-			System.out.println(service.MemberIP(id, pw));
-			if (service.MemberIP(id, pw) == 1) {
-				session.setAttribute("id", id);
-				session.setAttribute("pw", pw);
+			HashMap<String, Object> result = service.MemberIP(id, pw);
+			MemberBean user = (MemberBean)result.get("member");
+			int count = (int)result.get("count");
+			if (count == 1) {
+				session.setAttribute("uid", id);
+				session.setAttribute("uname", user.getM_name());
+				session.setAttribute("utel", user.getM_contact());
+				session.setAttribute("uclass", user.getM_class());
+				session.setAttribute("uprofile", user.getM_profile());
+				session.setAttribute("logined", "true");
+				session.setAttribute("loginResult", "true");
 				goTo = req.getContextPath() + "/center/intro";
 				res.sendRedirect(goTo);
 				return;
 			} else {
-				
+				session.setAttribute("loginResult", "false");
+				session.setAttribute("errorLogin", "로그인에 실패했습니다. 계정을 다시 확인해주세요.");
+				goTo = req.getContextPath() + "/center/intro";
+				res.sendRedirect(goTo);
+				return;
 			}
+		} else if (pathInfo.equals("/logout")) {
+			session.removeAttribute("uid");
+			session.removeAttribute("uname");
+			session.removeAttribute("utel");
+			session.removeAttribute("uclass");
+			session.removeAttribute("uprofile");
+			session.removeAttribute("logined");
+			goTo = req.getContextPath() + "/center/intro";
+			res.sendRedirect(goTo);
+			return;
 		} else if (pathInfo.equals("/signup"))
 			goTo = "/view/signup.jsp";
 		else if (pathInfo.equals("/editProfile"))
@@ -102,8 +122,6 @@ public class MembersController extends HttpServlet {
 			goTo = "/view/findpw.jsp";
 		else if (pathInfo.equals("/accountInfo"))
 			goTo = "/view/accountMain.jsp";
-		else if (pathInfo.equals("/lectureBoard"))
-			goTo = "/view/lecturerBoard.jsp";
 		else if (pathInfo.equals("/adminBoard"))
 			goTo = "/view/adminBoard.jsp";
 		

@@ -1,5 +1,7 @@
 package section01;
 
+import java.util.*;
+
 // 서비스. 은행의 종업원이라고 보시면 됩니다. 
 public class MembersService {
 	private MembersDAO dao;
@@ -10,6 +12,10 @@ public class MembersService {
 
 	public void printAllMembers() {
 		dao.allMembersList();
+	}
+	
+	public HashMap<String, Object> getAuthorInfo(String m_id) {
+		return dao.getOneMemberIdName(m_id);
 	}
 	
 	// 서비스에서 복잡한 거 중복체크들 한번에 묶어서 여기서 처리하고 리턴해서 컨트롤러에 결과 띄우기
@@ -24,8 +30,7 @@ public class MembersService {
 		dao.insert(name, id, pw, question, answer, phone);
 	}
 
-	public int MemberIP(String id, String pw) {
-
+	public HashMap<String, Object> MemberIP(String id, String pw) {
 		return dao.MemberIP(id, pw);
 	}
 }

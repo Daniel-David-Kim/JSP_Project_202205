@@ -131,6 +131,7 @@
 .tablerow.rowdip{background-color:#F8E494;}
 .numcol{width:120px;}
 .titlecol{width:474px;}
+.titlecol.titlecolrows{text-align:left;}
 .titlecol > a{text-decoration:none; color:black; font-weight:bolder;}
 .titlecol > a:hover{text-decoration:underline; cursor:pointer;}
 .authorcol{width:120px;}
@@ -141,6 +142,7 @@
 .depth_p.cboard{height: 447px;}
 .page_list{display:flex;}
 .page_l{margin-right: 10px;}
+.page_l.curPage{color:blue;}
 .page_list > li{list-style-type:none;}
 .page_list > li:hover{text-decoration:underline;}
 .page_list > li > a{text-decoration:none; color:black; font-size:14px; font-family:"함초롬돋움"; font-weight:bolder;}
@@ -181,3 +183,6 @@
 .popup_button{display:flex; align-items:center; font-family:"함초롬돋움"; font-weight:bold;}
 .popup_button:hover{cursor:pointer;}
 .popup_form{display:none;}
+
+.reply_board{color:red;}
+.board_add_btn_container{width:100%; display:flex; justify-content:flex-end;}

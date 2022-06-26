@@ -1,10 +1,11 @@
-<%@ page language="java" pageEncoding="utf-8" import="java.util.*, section01.*" %>
+<%@ page language="java" pageEncoding="utf-8" import="java.util.*, section01.*, java.sql.*" %>
 <%
 	request.setCharacterEncoding("utf-8");
 	Object lectures = request.getAttribute("lectureResult");
 	HashMap<String, Object> lectureResult = null;
 	if(lectures != null) lectureResult = (HashMap<String, Object>)request.getAttribute("lectureResult");
 	String add = (String)request.getAttribute("add");
+	HashMap<String, Object> authorInfo = (HashMap<String, Object>)request.getAttribute("authorInfo");
 %>
 <div class="left_wing"><!--div.left_wing : 좌측에 강의 목록 나오죠? 그거입니다!-->
 	<ul class="lectures_container">
@@ -23,10 +24,17 @@
 	<hr width="288" style="height:1px; background-color:#BCBEC0; margin-top:9px;"><!--hr:밑줄 라인-->
 	
 	<div class="lecturer"><!-- div.lecturer : 강의자의 프로필을 보여준다. -->
-		<img src="<%=request.getContextPath()%>/resources/images/profile1.png" class="lecturer_profile" width=57 height=57 />
+		<% if(authorInfo.get("profile") == null) { %>
+			<img src="<%=request.getContextPath()%>/resources/images/profile1.png" class="lecturer_profile" width=57 height=57 />
+		<% } else { 
+			Blob profile = (Blob)authorInfo.get("profile");
+			application.setAttribute("profileAuthor", profile);
+		%>
+			<img src="<%=request.getContextPath()%>/getRes/lecture/profileAuthor" class="lecturer_profile" width=57 height=57 />
+		<% } %>
 		<div class="lecturer_info">
 			<div class="lecturer_class">강의자</div>
-			<div class="lecturer_name">나도코딩</div>
+			<div class="lecturer_name"><%=(String)authorInfo.get("name")%></div>
 		</div>
 	</div><!-- div.lecturer -->
 	
@@ -52,6 +60,6 @@
 	</div><!-- div#lecturer_link -->
 	<% } %>
 	<div id="user_link"><!-- div#user_link : 사용자로 로그인하면 활성화되는 메뉴 : display:none으로 하면 사라지고, display:flex로 하면 다시 나타난다. -->
-		<a href="#">강의자 Q&A</a>
+		<a href="<%=request.getContextPath()%>/board/lectureBoard?author_id=<%=(String)authorInfo.get("id")%>">강의자 Q&A</a>
 	</div><!-- div#user_link -->
 </div><!--div.left_wing -->

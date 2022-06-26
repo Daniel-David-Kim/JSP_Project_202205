@@ -1,4 +1,10 @@
-// 여기서 프로젝트명은 꼭 바꾸어주어야 함!
+function getProjectName() {
+	var pathname = window.location.pathname;
+	var parse = pathname.split("/");
+	return "/" + parse[1];
+}
+
 function intro() {
-	location.href="/ProtoType04/center/intro";
+	contextPath = getProjectName();
+	location.href= contextPath + "/center/intro";
 }
