@@ -3,13 +3,13 @@ package section01;
 import java.sql.*;
 
 public class BoardBean {
-	private int depth;
-	private int q_num;
-	private int p_num;
-	private String m_id;
-	private String title;
-	private String content;
-	private Date writeDate;
+	private int depth; // 0
+	private int q_num; // 1
+	private int p_num; // 2
+	private String title; // 3
+	private String content; // 4
+	private String m_id; // 5
+	private Date writeDate; // 6
 	public int getDepth() {return depth;}
 	public void setDepth(int depth) {this.depth = depth;}
 	public int getQ_num() {return q_num;}
@@ -24,7 +24,7 @@ public class BoardBean {
 	public void setContent(String content) {this.content = content;}
 	public Date getWriteDate() {return writeDate;}
 	public void setWriteDate(Date writeDate) {this.writeDate = writeDate;}
-	public BoardBean(int depth, int q_num, int p_num, String m_id, String title, String content, Date writeDate) {
+	public BoardBean(int depth, int q_num, int p_num,  String title, String content, String m_id, Date writeDate) {
 		this.depth = depth; this.q_num = q_num; this.p_num = p_num; this.m_id = m_id;
 		this.title = title; this.content = content; this.writeDate = writeDate;
 	}

@@ -15,11 +15,27 @@ public class LectureService {
 		if(scat_idx > datas.size()) {
 			result.put("resultCode", "no_data");
 			result.put("all", datas);
-			result.put("one", datas.get(0));
+			if(datas.size() > 0) {
+				result.put("one", datas.get(0));
+				result.put("beanCode", 1);
+			} else {
+				long curTime = System.currentTimeMillis();
+				java.sql.Date curDate = new java.sql.Date(curTime);
+				result.put("one", new LectureBean(-1, "강의를 추가해주세요", "강의가 없습니다.\n강의를 추가해주세요.", "", "", "", "", null, curDate, "", "", "", "", null));
+				result.put("beanCode", -1);
+			}
 		} else {
 			result.put("resultCode", "ok");
 			result.put("all", datas);
-			result.put("one", datas.get(scat_idx));
+			if(datas.size() > 0) {
+				result.put("one", datas.get(scat_idx));
+				result.put("beanCode", 1);
+			} else {
+				long curTime = System.currentTimeMillis();
+				java.sql.Date curDate = new java.sql.Date(curTime);
+				result.put("one", new LectureBean(-1, "강의를 추가해주세요", "강의가 없습니다.\n강의를 추가해주세요.", "", "", "", "", null, curDate, "", "", "", "", null));
+				result.put("beanCode", -1);
+			}
 		}
 		return result;
 	}

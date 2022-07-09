@@ -23,4 +23,24 @@ public class BoardService {
 		System.out.println("articlesCount : " + result.get("resultRows"));
 		return result;
 	}
+	
+	public HashMap<String, Object> getOneArticle(String author_id, String q_num) {
+		return dao.getOneArticleById(author_id, q_num);
+	}
+	
+	public int insertNewQuestion(String author_id, String m_id, String title, String content, java.sql.Date curDate) {
+		return dao.insertNewData(author_id, m_id, title, content, curDate);
+	}
+	
+	public int insertReply(String author_id, String p_num, String m_id, String title, String content, java.sql.Date curDate) {
+		return dao.insertReplyData(author_id, p_num, m_id, title, content, curDate);
+	}
+	
+	public int updateQuestion(String author_id, String q_num, String title, String content) {
+		return dao.updateData(author_id, q_num, title, content);
+	}
+	
+	public int deleteQuestion(String author_id, String q_num) {
+		return dao.makeNullData(author_id, q_num);
+	}
 }

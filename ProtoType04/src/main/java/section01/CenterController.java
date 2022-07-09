@@ -31,15 +31,25 @@ public class CenterController extends HttpServlet {
 		HttpSession session = req.getSession();
 		PrintWriter out = res.getWriter();
 		MenusService menusService = new MenusService();
+		CommentService commentService = new CommentService();
 		
 		String pathInfo = req.getPathInfo();
 		String goTo = "";
 		
 		// 우주정거장 같은 역할. pathInfo를 가지고 다른 곳으로 쏠 url을 결정한다.
 		if(pathInfo.equals("/intro")) {
+			HashMap<String, Object> comments = null;
+			// 이 지점에서 댓글을 소환해줍니다.
+			comments = commentService.getCommentsIntro();
+			//
+			req.setAttribute("comments", comments);
 			HashMap<String, Vector<MenusBean>> menus = menusService.getSplitedCategory();
 			req.setAttribute("menus", menus);
 			goTo = "/view/intro.jsp";
+		} else if (pathInfo.equals("/joinus")) {
+			HashMap<String, Vector<MenusBean>> menus = menusService.getSplitedCategory();
+			req.setAttribute("menus", menus);
+			goTo = "/view/joinus.jsp";
 		}
 		
 		RequestDispatcher dispatch = req.getRequestDispatcher(goTo);

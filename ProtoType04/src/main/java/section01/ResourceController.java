@@ -58,6 +58,31 @@ public class ResourceController extends HttpServlet {
 				bos.close();
 				app.removeAttribute("profileAuthor");
 			} catch(SQLException e) { System.out.println("SQL Exception : ResourceController : profileAuthor"); }
+		} else if(pathInfo.equals("/account/profile")) {
+			Blob profile = (Blob)app.getAttribute("profile");
+			try {
+				BufferedInputStream bis = new BufferedInputStream(profile.getBinaryStream());
+				byte[] buffer = new byte[512];
+				while(bis.read(buffer) != -1) bos.write(buffer);
+				bos.flush();
+				bis.close();
+				bos.close();
+				app.removeAttribute("profile");
+			} catch(SQLException e) { System.out.println("SQL Exception : ResourceController : /account/profile"); }
+		} else if(pathInfo.equals("/comment/profile")) {
+			String qs = req.getQueryString();
+			String num = qs.split("=")[1];
+			System.out.println("num : " + num);
+			Blob profile = (Blob)app.getAttribute("profile" + num);
+			try {
+				BufferedInputStream bis = new BufferedInputStream(profile.getBinaryStream());
+				byte[] buffer = new byte[512];
+				while(bis.read(buffer) != -1) bos.write(buffer);
+				bos.flush();
+				bis.close();
+				bos.close();
+				app.removeAttribute("profile" + num);
+			} catch(SQLException e) { System.out.println("SQL Exception : ResourceController : /account/profile"); }
 		}
 		
 	}

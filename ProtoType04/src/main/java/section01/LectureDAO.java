@@ -49,6 +49,7 @@ public class LectureDAO {
 		return count;
 	}
 	
+	// 수정에도 본문 로직 수정해주어ㅑ 함! \n이나 \r, ' 있으면 나중에 수정이 안됨.
 	public int updateData(int[] idxArr, Object[] objArr, String categoryName, String lectureNum) {
         String[] labels = {"scat_num", "title", "content", "vid_title", "vid_url", "code", "summary", "img", "writeDate", "vid_title2", "vid_url2", "code2", "summary2", "img2"};
         //					   1          2         3           4           5        6         7       8          9            10            11        12        13        14
@@ -73,7 +74,16 @@ public class LectureDAO {
 	            if(targetIdx == 8 || targetIdx == 14) pstmt.setBlob(j, (Blob)objArr[targetIdx-1]);
 	            else if(targetIdx == 1) pstmt.setInt(j, (int)objArr[targetIdx-1]);
 	            else if(targetIdx == 9) pstmt.setDate(j, (java.sql.Date)objArr[targetIdx-1]);
-	            else pstmt.setString(j, (String)objArr[targetIdx-1]);  
+	            else {
+	            	switch(labels[targetIdx-1]) {
+		            	case "content" : System.out.println("!!!!!!!!!!!!!!!!content update!!!!!!!!!!!!!!!!!!!!!"); objArr[targetIdx-1] = ((String)objArr[targetIdx-1]).replaceAll("[\n\r]", "<br>").replaceAll("[\']", "\""); break;
+		            	case "code" : System.out.println("!!!!!!!!!!!!!!!!code update!!!!!!!!!!!!!!!!!!!!!!!"); objArr[targetIdx-1] = ((String)objArr[targetIdx-1]).replaceAll("[\n\r]", "<br>").replaceAll("[\']", "\""); break;
+		            	case "summary" : System.out.println("!!!!!!!!!!!!!!!!summary update!!!!!!!!!!!!!!!!!!!!!!!"); objArr[targetIdx-1] = ((String)objArr[targetIdx-1]).replaceAll("[\n\r]", "<br>").replaceAll("[\']", "\""); break;
+		            	case "code2" : System.out.println("!!!!!!!!!!!!!!!!code2 update!!!!!!!!!!!!!!!!!!!!!!!"); objArr[targetIdx-1] = ((String)objArr[targetIdx-1]).replaceAll("[\n\r]", "<br>").replaceAll("[\']", "\""); break;
+		            	case "summary2" : System.out.println("!!!!!!!!!!!!!!!!!!!!summary2 update!!!!!!!!!!!!!!!!!"); objArr[targetIdx-1] = ((String)objArr[targetIdx-1]).replaceAll("[\n\r]", "<br>").replaceAll("[\']", "\""); break;
+	            	}
+	            	pstmt.setString(j, (String)objArr[targetIdx-1]);  
+	            }
 	        }
 	        res = pstmt.executeUpdate();
         } catch(SQLException e) { e.printStackTrace(); System.out.println("LectureDAO : SQL Exception(updateData)"); }
@@ -96,9 +106,16 @@ public class LectureDAO {
 		return count;
 	}
 	
+	// 내용 안에 \n이나 \r, ' 있으면 나중에 수정이 안됨. 여기서 처리해서 들어가야 함.
 	public int insertLecture(LectureBean data, String categoryName) {
 		String sql = String.format("insert into %s_TBL (title, content, vid_title, vid_url, code, summary, img, writeDate, vid_title2, vid_url2, code2, summary2, img2) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", categoryName);
 		int count = 0;
+		// 여기서 처리!
+		if(data.getContent() != null) data.setContent(data.getContent().replaceAll("[\n\r]", "<br>").replaceAll("[\']", "\""));
+		if(data.getSummary() != null) data.setSummary(data.getSummary().replaceAll("[\n\r]", "<br>").replaceAll("[\']", "\""));
+		if(data.getCode() != null) data.setCode(data.getCode().replaceAll("[\n\r]", "<br>").replaceAll("[\']", "\""));
+		if(data.getSummary2() != null) data.setSummary2(data.getSummary2().replaceAll("[\n\r]", "<br>").replaceAll("[\']", "\""));
+		if(data.getCode2() != null) data.setCode2(data.getCode2().replaceAll("[\n\r]", "<br>").replaceAll("[\']", "\""));
 		try(
 			Connection conn = dataFactory.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(sql);

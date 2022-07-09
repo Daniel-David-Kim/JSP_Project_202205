@@ -30,4 +30,12 @@ public class MenusService {
 		return target;
 	}
 	
+	public int insertMenu(String subject, String targetBigcat, String author) {
+		return dao.insertMenu(subject, targetBigcat, author);
+	}
+	
+	public int deleteMenu(String menu_name) {
+		return dao.deleteMenu(menu_name);
+	}
+	
 }

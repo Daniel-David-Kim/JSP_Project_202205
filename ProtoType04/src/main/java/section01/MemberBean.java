@@ -3,14 +3,14 @@ package section01;
 import java.sql.*;
 
 public class MemberBean {
-	private String m_id;
-	private String m_pw;
-	private String m_name;
-	private String m_findq;
-	private String m_finda;
-	private String m_contact;
-	private Blob m_profile;
-	private int m_class;
+	private String m_id; // 1
+	private String m_pw; // 2
+	private String m_name; // 3
+	private String m_findq; // 4
+	private String m_finda; // 5
+	private String m_contact; // 6
+	private Blob m_profile; // 7
+	private int m_class; // 8
 	public String getM_id() {return m_id;}
 	public void setM_id(String m_id) {this.m_id = m_id;}
 	public String getM_pw() {return m_pw;}
