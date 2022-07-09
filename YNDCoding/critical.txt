@@ -1,0 +1,2 @@
+이 디렉터리의 context.xml의 <resource> 태그의 내용은
+Servers > Tomcat > context.xml에 <context> 태그 안 하단에다가 붙여넣으면 됩니다!
