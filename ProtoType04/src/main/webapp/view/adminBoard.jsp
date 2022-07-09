@@ -1,4 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" import="section01.*, java.util.*" %>
+<%
+	List<MemberBean> memberList = (List<MemberBean>) request.getAttribute("memberList");
+
+	String adminEnrollResult = null;
+	if(application.getAttribute("adminEnrollResult") != null) adminEnrollResult = (String)application.getAttribute("adminEnrollResult");
+	
+	String adminResult = null;
+	if(application.getAttribute("adminResult") != null) adminResult = (String)application.getAttribute("adminResult");
+%>
+<% if(adminEnrollResult != null && !adminEnrollResult.equals("")) {
+		if(adminEnrollResult.equals("success")) {%>
+			<script>alert("회원 추가에 성공했습니다!");</script>
+		<%} else {%>
+			<script>alert("회원 추가에 실패했습니다.....");</script>
+		<% }
+		application.removeAttribute("adminEnrollResult");
+	}%>
+<% if(adminResult != null && !adminResult.equals("")) {
+		if(adminResult.equals("success")) {%>
+			<script>alert("회원 변경에 성공했습니다!");</script>
+		<%} else {%>
+			<script>alert("회원 변경에 실패했습니다.....");</script>
+		<% }
+		application.removeAttribute("adminResult");
+	}%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,6 +31,7 @@
 	<title>admin Board Plus</title>
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/template.css" />
 	<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/intro.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/location.js"></script>
 </head>
 <body>
 	<jsp:include page="header.jsp" />
@@ -22,6 +48,7 @@
 				
 						<div class="container scroll-container" style="height:440px;"><!--p.container : 부트스트랩의 div.container과 유사하게 만들었습니다. 안에 들어가는 내용물들을 중앙으로 정렬시킵니다.-->
 							<table class="table" style="width:885px;">
+								
 								<tr class="tablerow headrow" style="height:40px; position:sticky; top:0px;">
 									<th class="idcol">아이디</th>
 									<th class="namecol">이름</th>
@@ -35,22 +62,70 @@
 									<th class="dcol">삭제</th>
 								</tr>
 								
-								<tr class="tablerow rowdip" style="height:40px;"><td class="idcol"><a href="#">yun01</a></td><td class="namecol">윤빛가람</td><td class="classcol">관리자</td><td class="contactcol">010-1212-3333</td><td class="pwcol">klnnk123124124</td><td class="piccol"></td><td class="qcol">1.나는 누구일까용?</td><td class="acol">그걸 내가 어떻게 알까용?</td><td class="ucol"><button class="btn btn_primary btn-small">update</button></td><td class="dcol"><button class="btn btn_primary btn-small">delete</button></td></tr>
-								<tr class="tablerow rowwhite" style="height:40px;"><td class="idcol"><a href="#">yun01</a></td><td class="namecol">윤빛가람</td><td class="classcol">관리자</td><td class="contactcol">010-1212-3333</td><td class="pwcol"></td><td class="piccol"></td><td class="qcol"></td><td class="acol"></td><td class="ucol"><button class="btn btn_primary btn-small">update</button></td><td class="dcol"><button class="btn btn_primary btn-small">delete</button></td></tr>
-								<tr class="tablerow rowdip" style="height:40px;"><td class="idcol"><a href="#"></a></td><td class="namecol"></td><td class="classcol"></td><td class="contactcol"></td><td class="pwcol"></td><td class="piccol"></td><td class="qcol"></td><td class="acol"></td><td class="ucol"><button class="btn btn_primary btn-small">update</button></td><td class="dcol"><button class="btn btn_primary btn-small">delete</button></td></tr>
+								<%
+		                        int i = 0;
+		                        for (MemberBean mb : memberList) {
+		                           String Uclass = "";
+		                           if (mb.getM_class() == 0) { Uclass = "관리자";
+		                           } else if (mb.getM_class() == 1) { Uclass = "선생님";
+		                           } else if (mb.getM_class() == 2) { Uclass = "학생"; }
+		                           if (i == 0) {
+		                              	i = 1;%>
+								
+								<tr class="tablerow rowdip" style="height:40px;">
+									<td class="idcol"><a href="#"><%=mb.getM_id()%></a></td>
+			                        <td class="namecol"><%=mb.getM_name()%></td>
+			                        <td class="classcol"><%=Uclass%></td>
+			                        <td class="contactcol"><%=mb.getM_contact()%></td>
+			                        <td class="pwcol"><%=mb.getM_pw()%></td>
+			                        <% if(mb.getM_profile() != null) { %>
+			                        	<td class="piccol">있음</td>
+			                        <% } else { %>
+			                        	<td class="piccol">없음</td>
+			                        <% } %>
+			                        <td class="qcol"><%=mb.getM_findq()%></td>
+			                        <td class="acol"><%=mb.getM_finda()%></td>
+			                        <td class="ucol"><button class="btn btn_primary btn-small" onclick="goToUpdate('<%=mb.getM_id()%>')">update</button></td>
+			                        <td class="dcol"><button class="btn btn_primary btn-small" onclick="goToDelete('<%=mb.getM_id()%>')">delete</button></td>
+								</tr>
+								
+								<% } else if (i == 1) {
+			                        	i = 0;%>
+			                        	
+								<tr class="tablerow rowwhite" style="height:40px;">
+									<td class="idcol"><a href="#"><%=mb.getM_id()%></a></td>
+		                            <td class="namecol"><%=mb.getM_name()%></td>
+		                            <td class="classcol"><%=Uclass%></td>
+		                            <td class="contactcol"><%=mb.getM_contact()%></td>
+		                            <td class="pwcol"><%=mb.getM_pw()%></td>
+		                            <% if(mb.getM_profile() != null) { %>
+			                        	<td class="piccol">있음</td>
+			                        <% } else { %>
+			                        	<td class="piccol">없음</td>
+			                        <% } %>
+		                            <td class="qcol"><%=mb.getM_findq()%></td>
+		                            <td class="acol"><%=mb.getM_finda()%></td>
+		                            <td class="ucol"><button class="btn btn_primary btn-small" onclick="goToUpdate('<%=mb.getM_id()%>')">update</button></td>
+		                            <td class="dcol"><button class="btn btn_primary btn-small" onclick="goToDelete('<%=mb.getM_id()%>')">delete</button></td>
+								</tr>
+								
+								<% }
+		                        }%>
+								<!-- tr class="tablerow rowdip" style="height:40px;"><td class="idcol"><a href="#"></a></td><td class="namecol"></td><td class="classcol"></td><td class="contactcol"></td><td class="pwcol"></td><td class="piccol"></td><td class="qcol"></td><td class="acol"></td><td class="ucol"><button class="btn btn_primary btn-small">update</button></td><td class="dcol"><button class="btn btn_primary btn-small">delete</button></td></tr>
 								<tr class="tablerow rowwhite" style="height:40px;"><td class="idcol"><a href="#"></a></td><td class="namecol"></td><td class="classcol"></td><td class="contactcol"></td><td class="pwcol"></td><td class="piccol"></td><td class="qcol"></td><td class="acol"></td><td class="ucol"><button class="btn btn_primary btn-small">update</button></td><td class="dcol"><button class="btn btn_primary btn-small">delete</button></td></tr>
 								<tr class="tablerow rowdip" style="height:40px;"><td class="idcol"></td><td class="namecol"></td><td class="classcol"></td><td class="contactcol"></td><td class="pwcol"></td><td class="piccol"></td><td class="qcol"></td><td class="acol"></td><td class="ucol"></td><td class="dcol"></td></tr>
 								<tr class="tablerow rowwhite" style="height:40px;"><td class="idcol"></td><td class="namecol"></td><td class="classcol"></td><td class="contactcol"></td><td class="pwcol"></td><td class="piccol"></td><td class="qcol"></td><td class="acol"></td><td class="ucol"></td><td class="dcol"></td></tr>
 								<tr class="tablerow rowdip" style="height:40px;"><td class="idcol"></td><td class="namecol"></td><td class="classcol"></td><td class="contactcol"></td><td class="pwcol"></td><td class="piccol"></td><td class="qcol"></td><td class="acol"></td><td class="ucol"></td><td class="dcol"></td></tr>
 								<tr class="tablerow rowwhite" style="height:40px;"><td class="idcol"></td><td class="namecol"></td><td class="classcol"></td><td class="contactcol"></td><td class="pwcol"></td><td class="piccol"></td><td class="qcol"></td><td class="acol"></td><td class="ucol"></td><td class="dcol"></td></tr>
 								<tr class="tablerow rowdip" style="height:40px;"><td class="idcol"></td><td class="namecol"></td><td class="classcol"></td><td class="contactcol"></td><td class="pwcol"></td><td class="piccol"></td><td class="qcol"></td><td class="acol"></td><td class="ucol"></td><td class="dcol"></td></tr>
-								<tr class="tablerow rowwhite" style="height:40px;"><td class="idcol"></td><td class="namecol"></td><td class="classcol"></td><td class="contactcol"></td><td class="pwcol"></td><td class="piccol"></td><td class="qcol"></td><td class="acol"></td><td class="ucol"></td><td class="dcol"></td></tr>
+								<tr class="tablerow rowwhite" style="height:40px;"><td class="idcol"></td><td class="namecol"></td><td class="classcol"></td><td class="contactcol"></td><td class="pwcol"></td><td class="piccol"></td><td class="qcol"></td><td class="acol"></td><td class="ucol"></td><td class="dcol"></td></tr-->
 								<!--tr class="tablerow rowdip" style="height:40px;"><td class="idcol"></td><td class="namecol"></td><td class="classcol"></td><td class="contactcol"></td><td class="pwcol"></td><td class="piccol"></td><td class="qcol"></td><td class="acol"></td><td class="ucol"></td><td class="dcol"></td></tr>
 								<tr class="tablerow rowwhite" style="height:40px;"><td class="idcol"></td><td class="namecol"></td><td class="classcol"></td><td class="contactcol"></td><td class="pwcol"></td><td class="piccol"></td><td class="qcol"></td><td class="acol"></td><td class="ucol"></td><td class="dcol"></td></tr-->
 							</table>
 						</div>
+						<form name="form_forward" method="post" action="<%=request.getContextPath()%>/account/updateMember" encType="utf-8"><input type="hidden" name="hdid" id="hdid" /></form>
 						<div class="container" style="display:flex; justify-content:flex-end;">
-							<button class="btn btn_primary" style="width:90px;">insert</button>
+							<button class="btn btn_primary" style="width:90px;" onclick="goToEnroll() ">insert</button>
 						</div>
 						<p class="depth_p cpanel"></p><!--pre.dynamic_phrase-->
 

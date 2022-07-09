@@ -1,5 +1,6 @@
 var img1 = false; // 이미지가 업로드 되었으면 true로 바뀝니다.
 var img2 = false; // 게시글 추가에 쓰이는 boolean 항목입니다.
+var profile = false;
 
 function prevTest() {
 	var resCode = prevValidate();
@@ -163,4 +164,36 @@ function img2Delete() {
 			alert("변경이 완료되었습니다.");
 		}
 	}	
+}
+
+function profileDelete() {
+	var profileShow = document.getElementsByName("profileShow")[0];
+	var profileBool = document.getElementsByName("profileUploaded")[0];
+	var profileChBool = document.getElementsByName("profileChanged")[0];
+	var contextPath = getProjectName();
+	if(profileBool.value == "true") {
+		var b = confirm("이 이미지를 삭제하시겠습니까?");
+		if(b == true) {
+			profileShow.src = contextPath + "/resources/images/gray_50.jpg";
+			profileBool.value = "false";
+			profileChBool.value="true";
+			alert("변경이 완료되었습니다.");
+		}
+	}	
+}
+
+function profileUpload(input) {
+	var imgShow = document.getElementsByName("profileShow")[0];
+	
+	if(input.files && input.files[0]) {
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			imgShow.src = e.target.result;
+		}
+		reader.readAsDataURL(input.files[0]);
+		alert("profile change activated.");
+		var profileChBool = document.getElementsByName("profileChanged")[0];
+		profileChBool.value = "true";
+		profile = true;
+	}
 }

@@ -15,11 +15,11 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Edit Profile</title>
+	<title>Edit Member</title>
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/template.css" />
 	<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/intro.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/advisor.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/ajaxProcess.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/ajaxProcess2.js"></script>
 </head>
 <body>
 	<jsp:include page="header.jsp" />
@@ -38,10 +38,11 @@
 
 
 						<div class="container">
-							<form class="form_update_profile" action="<%=request.getContextPath()%>/account/editProfile_process" method="post" encType="multipart/form-data">
+							<form class="form_update_profile" action="<%=request.getContextPath()%>/account/updateMember_process" method="post" encType="multipart/form-data">
 								<div class="form_update_box">
 
 									<input type="hidden" name="changedFields" value="" /> 
+									<input type="hidden" name="originalId" value="<%=memberInfo.getM_id()%>" />
 									<div class="form_update_row">
 										<div>
 											<h3>아이디</h3>
@@ -49,12 +50,17 @@
 											<hr style="width:200px; border:1px solid #F8E494;">
 										</div>
 										<div class="form_input_wrap">
+											<!-- 원래는 강의자 게시판에서는 회원의 아이디도 유효성을 체크한 후 수정할 수 있었습니다. 실제로 그렇게 구현이 되어 있습니다. -->
+											<!-- 그러나 아이디가 수정이 가능하면 관리자나 강의자 게시판을 만들고 수정하는 데 구현하는 시간이 너무 오래 걸려 아이디 수정을 불가하게 했습니다. -->
 											<% if(memberInfo != null) { %>
 												<input type="text" name="sid" class="form_input" value="<%=memberInfo.getM_id()%>" readonly />
 											<% } else { %>
 												<input type="text" name="sid" class="form_input" readonly />
 											<% } %>	
 										</div>
+									</div>
+									<div class="form_container">
+										<span class="warning_message"></span><!-- 0 : 아이디 -->
 									</div>
 									<p class="depth_p"></p>
 									<p class="depth_p"></p>
@@ -78,13 +84,20 @@
 
 									<div class="form_update_row">
 										<div>
-											<h3>현재 비밀번호</h3>
+											<h3>회원 등급</h3>
 											<p class="depth_update"></p>
 											<hr style="width:200px; border:1px solid #F8E494;">
 										</div>
 										<div class="form_input_wrap">
-											<input type="password" name="sprevpw" class="form_input" />
+											<% if(memberInfo != null) { %>
+												<input type="text" name="sclass" class="form_input" value="<%=memberInfo.getM_class()%>" />
+											<% } else { %>
+												<input type="text" name="sclass" class="form_input" />
+											<% } %>	
 										</div>
+									</div>
+									<div class="form_container">
+										<span class="warning_message"></span><!-- 1 : 회원 등급 -->
 									</div>
 									<p class="depth_p"></p>
 									<p class="depth_p"></p>
@@ -113,7 +126,7 @@
 										</div>	
 									</div>
 									<div class="form_container">
-										<span class="warning_message"></span><!-- 0 : 패스워드 -->
+										<span class="warning_message"></span><!-- 2 : 패스워드 -->
 									</div>
 									<p class="depth_p"></p>
 									<p class="depth_p"></p>
@@ -175,7 +188,7 @@
 										
 									</div>
 									<div class="form_container">
-										<span class="warning_message"></span><!-- 1 : 연락처 -->
+										<span class="warning_message"></span><!-- 3 : 연락처 -->
 									</div>
 									<p class="depth_p"></p>
 									<p class="depth_p"></p>
@@ -207,7 +220,7 @@
 												<img src="<%=request.getContextPath()%>/resources/images/Profile2.png" name="profileShow" onclick="profileDelete()" style="width:110px; height:110px;" />
 												<% } %>	
 												<input type="hidden" name="profileChanged" value="false" />
-												<input type="file" name="sprofile" onchange="profileUpload(this)" />
+												<input type="file" name="sprofile" onchange="profileUpload()" />
 											</div>	
 										</div>
 									</div>
@@ -220,14 +233,8 @@
 									<script>
 										function revisePrevCheck() {
 											var pw_changed = false; // 패스워드가 바뀐 거면 true
-											var prev = innerPrevCheck2();
+											var prev = innerPrevCheck3();
 											var contextPath = getProjectName();
-											var sprevpw = document.getElementsByName("sprevpw")[0];
-											<% String pw = "\'" + memberInfo.getM_pw() + "\'"; %>
-											if(sprevpw.value != <%=pw%>) {
-												alert("회원 변경을 위한 비밀번호가 틀렸습니다. 다시 입력해주세요.");
-												return;
-											}
 											if(prev[0] == -1) {
 												alert("모든 입력사항은 필수입니다.");
 											} else {
@@ -237,11 +244,13 @@
 													String findq = "\'" + memberInfo.getM_findq() + "\'";
 													String finda = "\'" + memberInfo.getM_finda() + "\'";
 													String contact = "\'" + memberInfo.getM_contact() + "\'";
+													String uclass = "\'" + memberInfo.getM_class() + "\'";
+													String pw = "\'" + memberInfo.getM_pw() + "\'";
 												%>
 												var profileChBool = document.getElementsByName("profileChanged")[0].value;
 												var pw1 = document.getElementsByName("spw1")[0];
 												var pw2 = document.getElementsByName("spw2")[0];
-												if((prev[1][1].value==<%=id%>)&&(prev[1][0].value==<%=name%>)&&(((pw1.value == null)||(pw1.value == ""))&&((pw2.value == null)||(pw2.value == "")))&&(prev[1][2].value==<%=findq%>)&&(prev[1][3].value==<%=finda%>)&&(prev[1][4].value==<%="\'" + phones[0] + "\'"%>)&&(prev[1][5].value==<%="\'" + phones[1] + "\'"%>)&&(prev[1][6].value==<%="\'" + phones[2] + "\'"%>)&&(profileChBool=='false')) {
+												if((prev[1][1].value==<%=id%>)&&(prev[1][0].value==<%=name%>)&&(((pw1.value == null)||(pw1.value == ""))&&((pw2.value == null)||(pw2.value == "")))&&(prev[1][2].value==<%=findq%>)&&(prev[1][3].value==<%=finda%>)&&(prev[1][4].value==<%="\'" + phones[0] + "\'"%>)&&(prev[1][5].value==<%="\'" + phones[1] + "\'"%>)&&(prev[1][6].value==<%="\'" + phones[2] + "\'"%>)&&(prev[1][7].value==<%=uclass%>)&&(profileChBool=='false')) {
 													alert("변경사항을 입력해주세요.");
 													return;
 												}
@@ -251,30 +260,34 @@
 														return;
 													} else pw_changed = true;
 												}
-												var pwChange = false; var contactChange = false;
-												var fields = pw_changed == true? [sprevpw.value, prev[1][0].value, prev[1][2].value, prev[1][3].value, prev[1][4].value+"-"+prev[1][5].value+"-"+prev[1][6].value] : [prev[1][0].value, prev[1][2].value, prev[1][3].value, prev[1][4].value+"-"+prev[1][5].value+"-"+prev[1][6].value];
-												var values = pw_changed == true? [pw1.value, <%=name%>, <%=findq%>, <%=finda%>, <%=contact%>] : [<%=name%>, <%=findq%>, <%=finda%>, <%=contact%>];
-												var labels = pw_changed == true? ["m_pw", "m_name", "m_findq", "m_finda", "m_contact"] : ["m_name", "m_findq", "m_finda", "m_contact"];
+												
+												var idChange = false; var pwChange = false; var contactChange = false; var classChange = false;
+												var fields = pw_changed == true? [prev[1][1].value, pw1.value, prev[1][0].value, prev[1][2].value, prev[1][3].value, prev[1][4].value+"-"+prev[1][5].value+"-"+prev[1][6].value, prev[1][7]] : [prev[1][1].value, prev[1][0].value, prev[1][2].value, prev[1][3].value, prev[1][4].value+"-"+prev[1][5].value+"-"+prev[1][6].value, prev[1][7]];
+												var values = pw_changed == true? [<%=id%>, <%=pw%>, <%=name%>, <%=findq%>, <%=finda%>, <%=contact%>, <%=uclass%>] : [<%=id%>, <%=name%>, <%=findq%>, <%=finda%>, <%=contact%>, <%=uclass%>];
+												var labels = pw_changed == true? ["m_id", "m_pw", "m_name", "m_findq", "m_finda", "m_contact", "m_class"] : ["m_id", "m_name", "m_findq", "m_finda", "m_contact", "m_class"];
 												var collection = "";
-												
-												
+													
 												for(var i = 0; i < fields.length; i++) {
 													//alert("field : " + fields[i] + " / value : " + values[i]);
 													if(fields[i] != values[i]) {
 														collection += labels[i] + ",";
+														if(labels[i] == "m_id") idChange = true;
 														if(labels[i] == "m_pw") pwChange = true;
 														if(labels[i] == "m_contact") contactChange = true;
+														if(labels[i] == "m_class") classChange = true;
 													}	
 												}
+												
 												var changedFields = document.getElementsByName("changedFields")[0];
 												changedFields.value = collection;
 												//alert("changed vlaues : " + changedFields.value);
-													
-												var res = ajaxPrevCheck2(pwChange, contactChange);
+														
+												var res = ajaxPrevCheck3(idChange, pwChange, contactChange, classChange);
 												if(res == 1) {
 													var form = document.getElementsByClassName("form_update_profile")[0];
 													if(form != null) form.submit();
 												}
+												// 여기까지 클리어!
 											}
 										}
 									</script>

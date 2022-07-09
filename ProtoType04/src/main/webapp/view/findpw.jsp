@@ -6,6 +6,7 @@
 	<title>Find Password</title>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/template.css" />
 	<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/intro.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/ajaxProcess2.js"></script>
 </head>
 <body>
 	<jsp:include page="header.jsp" />
@@ -22,7 +23,7 @@
 					</div>
 					<p class="depth_p slim"></p>
 					<div class="form_container">
-						<input type="text" name="" class="form_input" />
+						<input type="text" name="id" class="form_input" />
 					</div>
 
 					<div class="form_container">
@@ -31,7 +32,7 @@
 
 					<p class="depth_p"></p>
 					<div class="form_container">
-						<input type="submit" value="find" class="btn btn_primary" style="width:100px;" />
+						<input type="button" value="find" onclick="findpw()" class="btn btn_primary" style="width:100px;" />
 					</div>
 					<p class="depth_p"></p>
 					<p class="depth_p"></p>

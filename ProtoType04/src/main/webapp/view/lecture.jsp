@@ -1,10 +1,34 @@
 <%@ page language="java" contentType="text/html;charset=utf-8" pageEncoding="utf-8"
-    import="java.util.*, section01.*" %>
+    import="java.util.*, section01.*, java.sql.*" %>
 <%
 	request.setCharacterEncoding("utf-8");
 	HashMap<String, Object> lectureResult = (HashMap<String, Object>)request.getAttribute("lectureResult");
 	String lectureAddStr = (String)application.getAttribute("lectureAdd");
 	String lectureReviseStr = (String)application.getAttribute("lectureRevise");
+	HashMap<String, Object> comments = (HashMap<String, Object>)request.getAttribute("comments");
+	application.setAttribute("bcat", (int)request.getAttribute("bcat"));
+	application.setAttribute("scat", (int)request.getAttribute("scat"));
+	application.setAttribute("categoryName", (String)request.getAttribute("categoryName"));
+	
+	int lectureNum = -1;
+	if(request.getAttribute("lectureNum") != null) lectureNum = (int)request.getAttribute("lectureNum");
+	
+	String commentResult = null;
+	if(application.getAttribute("commentResult") != null) commentResult = (String)application.getAttribute("commentResult");
+	
+	String commentInsertResult = null;
+	if(application.getAttribute("commentInsertResult") != null) commentInsertResult = (String)application.getAttribute("commentInsertResult");
+	
+	String logined = null;
+	String uid = null;
+	int uclass = 2;
+	if(session.getAttribute("logined") != null) {
+		logined = (String)session.getAttribute("logined");
+		if(logined.equals("true")) {
+			uid = (String)session.getAttribute("uid");
+			uclass = (int)session.getAttribute("uclass");
+		}
+	}
 %>
 <% 
 	if(lectureAddStr != null && !lectureAddStr.equals("")) {
@@ -28,6 +52,22 @@
 	} 
     application.removeAttribute("lectureRevise");
 %>
+<% if(commentResult != null && !commentResult.equals("")) {
+		if(commentResult.equals("success")) {%>
+			<script>alert("댓글 변경에 성공했습니다!");</script>
+		<%} else {%>
+			<script>alert("댓글 변경에 실패했습니다.....");</script>
+		<% }
+		application.removeAttribute("commentResult");
+	}%>
+<% if(commentInsertResult != null && !commentInsertResult.equals("")) {
+		if(commentInsertResult.equals("success")) {%>
+			<script>alert("댓글 삽입에 성공했습니다!");</script>
+		<%} else {%>
+			<script>alert("댓글 삽입에 실패했습니다.....");</script>
+		<% }
+		application.removeAttribute("commentInsertResult");
+	}%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,6 +75,7 @@
 	<title>Lecture</title>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/template.css" />
 	<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/intro.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/location.js"></script>
 </head>
 <body>
 	<jsp:include page="header.jsp" />
@@ -158,17 +199,99 @@
 
 					<hr width="840" style="border:1px solid #f1f1f2; background-color:#f1f1f2; margin-left:40px; margin-right:130px;"><!--hr:밑줄 라인-->
 					<!--hr : 인트로 페이지의 그 hr 맞습니다. 다만, 왼쪽 날개에 맞게 style에서 margin을 조정했습니다. -->
+					
 
+					
+					<% if(lectureNum != -1) { %>
+
+
+					<!-- 댓글 영역 -->
+					<%
+						int numOfRows = (int)comments.get("numOfRows");
+						Vector<CommentBean> cs = (Vector<CommentBean>)comments.get("comments");
+					%>
 					<div class="comments" style="margin-left:40px; margin-right:130px;"><!--div.comments : 댓글 작성 폼과 댓글 목록들을 포함하는 컨테이너입니다.-->
 						<!--div.comments : 인트로 페이지의 그 div.comments 맞습니다. 다만, 왼쪽 날개에 맞게 style에서 margin을 조정했습니다. -->
-						<form class="form_comment">
-							<img src="<%=request.getContextPath()%>/resources/images/profile1.png" width="50" height="50" />
-							<textarea cols=102 rows=7></textarea>
+						<form class="form_comment" action="<%=request.getContextPath()%>/comment/enroll" method="post" encType="utf-8">
+							<input type="hidden" name="revise" id="hdip" />
+							<% if(logined != null && logined.equals("true")) { 
+									if(session.getAttribute("uprofile") != null) {
+										application.setAttribute("profileAuthor", (Blob)session.getAttribute("uprofile"));%>
+										<img src="<%=request.getContextPath()%>/getRes/lecture/profileAuthor" width="50" height="50" />
+									<%} else {%>
+										<img src="<%=request.getContextPath()%>/resources/images/profile1.png" width="50" height="50" />
+								   <% } %>
+							<% } else { %>
+								<img src="<%=request.getContextPath()%>/resources/images/profile1.png" width="50" height="50" />
+							<% } %>
+							<% if(logined != null && logined.equals("true")) { %>
+								<textarea name="content" id="commentEnrollContent" cols=102 rows=7></textarea>
+							<% } else { %>
+								<textarea name="content" id="commentEnrollContent" cols=102 rows=7 disabled></textarea>
+							<% } %>
 						</form>
+						<div style="display:flex; justify-content:flex-end; margin-bottom:30px;">
+							<% if(logined != null && logined.equals("true")) { %>
+							<div class="btn-menus" onclick="enrollComment()"><h5>등록</h5></div>
+							<% } %>
+						</div>
+						<hr style="border:1px solid #f1f1f2; width: 95%; background-color:#f1f1f2; margin-left:40px; margin-right:90px;"><!--hr:밑줄 라인-->
+						
 						<div class="comment_list"><!--div.comment_list :댓글들이 여기 부분으로 쭉 나열됩니다.-->
-							
+							<% if(numOfRows > 0) {
+									for(int i =0; i < cs.size(); i++) { 
+										CommentBean comment = cs.get(i);%>
+										<!-- 이렇게 하나의 댓글 -->
+										<div class="container">
+											<div style="width:100%; display:flex; align-items:flex-start;">
+												<% if(comment.getM_profile() == null) { %>
+													<img src="<%=request.getContextPath()%>/resources/images/profile1.png" width="50" height="50" /><!-- 프로필 사진 -->
+												<% } else {
+													application.setAttribute("profile" + i, comment.getM_profile());
+													%>
+													<img src="<%=request.getContextPath()%>/getRes/comment/profile?num=<%=i%>" width="50" height="50" /><!-- 프로필 사진 -->
+												<% } %>
+												<div style="margin-left:30px;">
+													<div style="display:flex; justify-content:space-between;">
+														<div style="display:flex;">
+															<h5><%=comment.getM_name()%></h5><!-- 닉넴 -->
+															<span style="padding-left:20px;"></span>
+															<h5><%=comment.getWriteDate()%></h5><br><!-- 날짜 -->
+														</div>
+														<div style="display:flex;">
+															<div class="btn-menus" onclick="commentRevise<%=i%>()"><h5>수정</h5></div>
+															<span style="padding-left:20px;"></span>
+															<div class="btn-menus" onclick="commentDelete(<%=comment.getC_num()%>)"><h5>삭제</h5></div>
+														</div>
+													</div>
+													<pre class="dynamic_phrase" style="width:750px; margin-top:0px;"><%=comment.getContent()%></pre><!-- 본문 -->
+												</div>
+											</div>
+											<script>
+												function commentRevise<%=i%>() {
+													var ip = prompt("변경할 내용을 입력해주세요.", "<%=comment.getContent()%>");
+													if(ip == "<%=comment.getContent()%>") {
+														alert("변경사항을 입력해주세요.");
+													} else if(ip != "" && ip != null) {
+														var form = document.getElementsByClassName("form_comment")[0];
+														var hidden = document.getElementById("hdip");
+														hidden.value = ip;
+														form.action = "<%=request.getContextPath()%>" + "/comment/revise?c_num=<%=comment.getC_num()%>";
+														form.submit();
+													}
+												}
+											</script>
+										</div>
+										<!-- 이렇게 하나의 댓글 -->
+							<% 		
+									}
+								} %>	
 						</div><!--div.comment_list-->
 					</div><!--div.comments-->
+					<!-- 댓글 영역 -->
+					
+					<% } %>
+					
 
 				</div><!--div.lecture_container-->
 			</div><!--div.page_wrapper-->

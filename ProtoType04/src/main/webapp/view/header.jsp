@@ -20,7 +20,7 @@
 			<% } else { %>
 			<div><a href="<%=request.getContextPath()%>/account/login" class="upper_links account_control"><pre>SIGN IN</pre></a></div>
 			<% } %>
-			<div><a href="#" class="upper_links"><pre>JOIN US</pre></a></div>
+			<div><a href="<%=request.getContextPath()%>/center/joinus" class="upper_links"><pre>JOIN US</pre></a></div>
 		</div>
 	</div>
 </div>

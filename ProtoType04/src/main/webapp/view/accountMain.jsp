@@ -8,6 +8,19 @@
 		case 1 : classStr="강의자"; break;
 		case 2 : classStr="일반회원"; break;
 	}
+	String memberRevise = (String)application.getAttribute("memberRevise");
+	String loginResult = (String)session.getAttribute("loginResult");
+	if(loginResult != null && !loginResult.equals("")) session.removeAttribute("loginResult");
+%>
+<% if(memberRevise != null && !memberRevise.equals("")) {
+		boolean memberRevised = Boolean.parseBoolean(memberRevise);
+		if(memberRevised == true) {%>
+			<script>alert('멤버 정보 수정에 성공했습니다!');</script>
+		<% } else { %>
+			<script>alert('멤버 정보 수정에 실패했습니다.....');</script>
+		<% }
+		application.removeAttribute("memberRevise");
+	}
 %>
 <!DOCTYPE html>
 <html>

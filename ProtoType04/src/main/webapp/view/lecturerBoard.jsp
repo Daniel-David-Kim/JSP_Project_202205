@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" import="java.util.*, section01.*, java.sql.*" %>
 <%
 	request.setCharacterEncoding("utf-8");
+	Object loginedObj = session.getAttribute("logined");
+	String logined = null;
+	if(loginedObj != null) {
+		logined = (String)loginedObj;
+	}
 	HashMap<String, Object> authorInfo = (HashMap<String, Object>)request.getAttribute("authorInfo");
 	application.setAttribute("author_id", (String)authorInfo.get("id"));
 	HashMap<String, Object> articles = (HashMap<String, Object>)request.getAttribute("articles");
@@ -13,9 +18,17 @@
 	int totalPages = (int)(allArticles/10.0) + 1;
 	Vector<BoardBean> articleList = (Vector<BoardBean>)articles.get("articles");
 	
-	System.out.println("currentPage = " + currentPage);
-	System.out.println("startPage = " + startPage);
-	System.out.println("currentRows = " + currentResultRows);
+	String boardResult = "";
+	if(application.getAttribute("boardResult") != null) {
+		boardResult = (String)application.getAttribute("boardResult");
+		if(boardResult.equals("success")) {%>
+			<script>alert("변경에 성공했습니다!");</script>	
+		<%} else { %>
+			<script>alert("변경에 실패했습니다.....");</script>
+		<%}
+		application.removeAttribute("boardResult");
+	}
+	
 %>
 <!DOCTYPE html>
 <html>
@@ -33,28 +46,7 @@
 
 			<div class="page_wrapper"><!--div.page_wrapper : 강의 페이지, 그 외에 왼쪽 날개(left wing)가 필요한 페이지에서 왼쪽 날개를 배치시키기 위한, 감싸주는 컨테이너입니다.-->
 
-				<div class="left_wing"><!--div.left_wing : 좌측에 강의 목록 나오죠? 그거입니다!-->
-					<ul class="lectures_container">
-						<li class="lecture_list lecture_label">강의자 게시판</li>		
-					</ul>
-
-					<hr width="288" style="height:1px; background-color:#BCBEC0; margin-top:9px;"><!--hr:밑줄 라인-->
-					<div class="lecturer"><!-- div.lecturer : 강의자의 프로필을 보여준다. -->
-						<% if(authorInfo.get("profile") == null) { %>
-							<img src="<%=request.getContextPath()%>/resources/images/profile1.png" class="lecturer_profile" width=57 height=57 />
-						<% } else { 
-							Blob profile = (Blob)authorInfo.get("profile");
-							application.setAttribute("profileAuthor", profile);
-						%>
-							<img src="<%=request.getContextPath()%>/getRes/lecture/profileAuthor" class="lecturer_profile" width=57 height=57 />
-						<% } %>
-						<div class="lecturer_info">
-							<div class="lecturer_class">강의자</div>
-							<div class="lecturer_name"><%=(String)authorInfo.get("name")%></div>
-						</div>
-					</div><!-- div.lecturer -->
-					<hr width="288" style="height:1px; background-color:#BCBEC0;">
-				</div>
+				<jsp:include page="leftWingLecturer.jsp" />
 
 				<div class="lecture_container"><!--div.lecture_container : 우측에 강의 내용이 올라오는 컨테이너입니다.-->
 
@@ -64,18 +56,25 @@
 							<table class="table">
 								<tr class="tablerow headrow"><th class="numcol">번호</th><th class="titlecol">제목</th><th class="authorcol">작성자</th><th class="datecol">작성일</th></tr>
 								
+								<!-- 게시글이 하나도 없을 때 -->
+								<% if(articleList.size() == 0) { %>
+									<tr class="tablerow rowdip"><td class="numcol" colspan="4">게시글이 없습니다.</td></tr>
+								<% } %>
+								
 								<% for(int i = 0; i < articleList.size(); i++) { 
 										BoardBean article = articleList.get(i);
 										if(i % 2 == 0) {
 								%>
-									<tr class="tablerow rowdip"><td class="numcol"><%=startNo + i%></td><td class="titlecol titlecolrows"><a href="<%=request.getContextPath()%>">
+									<tr class="tablerow rowdip"><td class="numcol"><%=startNo + i%></td><td class="titlecol titlecolrows"><a href="<%=request.getContextPath()%>/board/lectureBoard/question?q_id=<%=article.getQ_num()%>"
+									 <% if(article.getM_id() == null || article.getM_id().equals("")) { %> style="color:gray;"<% } %>>
 										<% for(int j = 0; j < article.getDepth()-1; j++) { %><span style="padding-right:20px;"></span><% } %>
-										<% if(article.getDepth() > 1) { %><span class="reply_board">[답글]</span><% } %>
+										<% if(article.getDepth() > 1&&(article.getM_id() != null && !article.getM_id().equals(""))) { %><span class="reply_board">[답글]</span><% } %>
 										<%=article.getTitle()%></a></td><td class="authorcol bauthor"><%=article.getM_id()%></td><td class="datecol"><%=article.getWriteDate()%></td></tr>
 								<% 		} else { %>
-									<tr class="tablerow rowwhite"><td class="numcol"><%=startNo + i%></td><td class="titlecol titlecolrows"><a href="<%=request.getContextPath()%>">
+									<tr class="tablerow rowwhite"><td class="numcol"><%=startNo + i%></td><td class="titlecol titlecolrows"><a href="<%=request.getContextPath()%>/board/lectureBoard/question?q_id=<%=article.getQ_num()%>"
+									 <% if(article.getM_id() == null || article.getM_id().equals("")) { %> style="color:gray;"<% } %>>
 										<% for(int j = 0; j < article.getDepth()-1; j++) { %><span style="padding-right:20px;"></span><% } %>
-										<% if(article.getDepth() > 1) { %><span class="reply_board">[답글]</span><% } %>
+										<% if(article.getDepth() > 1&&(article.getM_id() != null && !article.getM_id().equals(""))) { %><span class="reply_board">[답글]</span><% } %>
 										<%=article.getTitle()%></a></td><td class="authorcol bauthor"><%=article.getM_id()%></td><td class="datecol"><%=article.getWriteDate()%></td></tr>
 								<% 		}
 								   }
@@ -84,7 +83,9 @@
 						</div>	
 						<div class="container">
 							<div class="board_add_btn_container">
+								<% if(logined != null && logined.equals("true")) { %>
 								<button class="btn btn_primary" style="width:80px;" onclick="addQuestion()">Write</button>
+								<% } %>
 								<script>
 									function addQuestion() {
 										location.href = "<%=request.getContextPath()%>/board/lectureBoard/newQuestion";

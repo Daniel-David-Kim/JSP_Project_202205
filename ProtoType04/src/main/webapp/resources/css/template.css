@@ -39,7 +39,7 @@
 
 .navitem{font-family:"«‘√ ∑“µ∏øÚ"; color:white; font-weight:bold; font-size: 17px; text-decoration:none;}
 .navitem:hover{color:#F3E02A; cursor: pointer;}
-.lecture.btns{display:none;}
+.lecture.btns{display:flex;}
 
 
 
@@ -64,7 +64,6 @@
 	.highest{justify-content:flex-start;}
 	.whole{width: 100%; display:flex; justify-content:flex-start;}
 	
-	.lecture.btns{display:flex;}
 	.nav.ul.first{right:-120px;}
 	.nav.ul.second{right:-90px;}
 	.nav.ul.third{right:-95px;}
@@ -186,3 +185,9 @@
 
 .reply_board{color:red;}
 .board_add_btn_container{width:100%; display:flex; justify-content:flex-end;}
+
+.deep_depth_textarea{height:280px;}
+.depth_p.boardArt{height:244px;}
+.board_question_id{display:flex; justify-content:flex-start; margin-bottom:20px;}
+
+.btn-menus:hover{cursor:pointer;}

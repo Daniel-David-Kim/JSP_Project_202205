@@ -6,6 +6,20 @@
 	if(lectures != null) lectureResult = (HashMap<String, Object>)request.getAttribute("lectureResult");
 	String add = (String)request.getAttribute("add");
 	HashMap<String, Object> authorInfo = (HashMap<String, Object>)request.getAttribute("authorInfo");
+	
+	int lectureNum = -1;
+	if(request.getAttribute("lectureNum") != null) lectureNum = (int)request.getAttribute("lectureNum");
+	
+	String logined = null;
+	String uid = null;
+	int uclass = 2;
+	if(session.getAttribute("logined") != null) {
+		logined = (String)session.getAttribute("logined");
+		if(logined.equals("true")) {
+			uid = (String)session.getAttribute("uid");
+			uclass = (int)session.getAttribute("uclass");
+		}
+	}
 %>
 <div class="left_wing"><!--div.left_wing : 좌측에 강의 목록 나오죠? 그거입니다!-->
 	<ul class="lectures_container">
@@ -18,7 +32,17 @@
 				}
 			}
 		%>
+		
+		<!-- 강의자 본인이거나 관리자만 보이게 -->
+		<% if(logined != null && logined.equals("true")) { 
+				if(((String)authorInfo.get("id")).equals(uid)||uclass == 0) {%>
+				
 		<li class="lecture_list"><a href="<%=request.getContextPath()%>/lecture/<%=(int)request.getAttribute("categoryCode")%>/0/addLecture" class="lecture_link">강의 추가</a></li>
+		
+		<% 		}
+			} %>
+		<!-- 강의자 본인이거나 관리자만 보이게 -->
+			
 	</ul>
 	
 	<hr width="288" style="height:1px; background-color:#BCBEC0; margin-top:9px;"><!--hr:밑줄 라인-->
@@ -43,6 +67,12 @@
 		if(add == null) { 
 	%>
 	<div id="lecturer_link"><!-- div#lecturer_link : 강의자로 로그인하면 활성화되는 메뉴 : 현재는 display:none으로 되어있지만, display:flex로 하면 다시 나타난다! -->
+		
+		<!-- 강의자 본인이거나 관리자만 보이게 -->
+		<% if(logined != null && logined.equals("true")) { 
+				if(((String)authorInfo.get("id")).equals(uid)||uclass == 0) {
+					if(lectureNum != -1) { %>
+				
 		<a href="<%=request.getContextPath()%>/lecture/<%=(int)request.getAttribute("categoryCode")%>/0/reviseLecture">강의 수정</a>
 		
 		<a href="#" onclick="youSure()">강의 삭제</a>
@@ -56,6 +86,12 @@
 				}
 			}
 		</script>
+		
+		<% 		   }
+				}
+			} %>
+		<!-- 강의자 본인이거나 관리자만 보이게 -->
+		
 		
 	</div><!-- div#lecturer_link -->
 	<% } %>

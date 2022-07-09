@@ -10,7 +10,8 @@
 		<li class="lecture_list"><a href="<%=request.getContextPath()%>/account/editProfile" class="lecture_link">회원 정보 수정</a></li>
 		<% if(uclass < 2) { %>
 		<li class="lecture_list"><a href="<%=request.getContextPath()%>/board/lectureBoard?author_id=<%=uid%>" class="lecture_link">강의자 게시판</a></li>
-		<% } else if(uclass < 1) { %>
+		<% } 
+		   if(uclass < 1) { %>
 		<li class="lecture_list"><a href="<%=request.getContextPath()%>/account/adminBoard" class="lecture_link">회원 관리</a></li>
 		<% } %>	
 	</ul>
