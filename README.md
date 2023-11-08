@@ -30,46 +30,46 @@
 - 프로그래밍을 배우고자 하는 사람들이라면 전공 상관없이 활용 가능.
 
 # 화면 구성
+[처음 화면]   
 ![intro](https://user-images.githubusercontent.com/78375169/178099426-56d9f8ae-4ee8-4c34-aa97-ee5191d514a0.jpg)
-처음 화면
 <br/>
 
+[강의 화면]   
 ![lecture](https://user-images.githubusercontent.com/78375169/178099468-8f824fbb-036e-43d9-962a-d2337295fa56.jpg)
-강의 화면
 <br/>
 
+[강의 작성 화면]   
 ![그림6](https://user-images.githubusercontent.com/78375169/178099637-d65436f3-ecfa-4b5a-b7cb-a2c01bc513bd.png)
-강의 작성 화면
 <br/>
 
+[로그인 화면]   
 ![login](https://user-images.githubusercontent.com/78375169/178099481-f9fc33ab-9ec0-4807-930a-2a66718b47f3.jpg)
-로그인 화면
 <br/>
 
+[회원가입 화면]   
 ![signin](https://user-images.githubusercontent.com/78375169/178099485-b419c14a-7ed5-4c0a-ab9c-f4f9dbbcf810.jpg)
-회원가입 화면
 <br/>
 
+[강의자 게시판]   
 ![1](https://user-images.githubusercontent.com/78375169/178099501-5cfe5001-d43d-4c37-bcb7-3b8c2be14637.jpg)
-강의자 게시판
 <br/>
 
+[강의자 게시판 게시물 화면]   
 ![그림4](https://user-images.githubusercontent.com/78375169/178099607-a2f87ae8-5d5a-4a15-a2d0-1d102bf8eb0f.png)
-강의자 게시판 게시물 화면
 <br/>
 
+[강의자 게시판 게시글 작성]   
 ![그림5](https://user-images.githubusercontent.com/78375169/178099623-926aff8f-1bd0-4175-9b19-e3dcfe076097.png)
-강의자 게시판 게시글 작성
 <br/>
 
+[관리자 게시판]   
 ![그림3](https://user-images.githubusercontent.com/78375169/178099565-d2f49453-826d-4d16-a970-800979d9ef56.png)
-관리자 게시판
 <br/>
 
+[회원 정보 메인 화면]   
 ![그림1](https://user-images.githubusercontent.com/78375169/178099586-16c4149c-852c-4c98-b6fe-7c8bf9f46201.png)
-회원 정보 메인 화면
 <br/>
 
+[회원 정보 수정]   
 ![그림2](https://user-images.githubusercontent.com/78375169/178099594-1804d030-e96a-4a56-9ac2-5ab2c9b2846c.png)
-회원 정보 수정
 <br/>
